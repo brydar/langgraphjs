@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import { PostgresSaver } from "@langchain/langgraph-checkpoint-postgres";
 
 import {

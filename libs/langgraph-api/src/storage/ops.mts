@@ -62,8 +62,8 @@ export class FileSystemOps implements Ops {
           Object.entries(STORE.assistants).filter(
             ([key, assistant]) =>
               assistant.metadata?.created_by === "system" &&
-              uuid5(assistant.graph_id, NAMESPACE_GRAPH) === key
-          )
+              uuid5(assistant.graph_id, NAMESPACE_GRAPH) === key,
+          ),
         );
       }
 
@@ -134,7 +134,7 @@ class Queue {
       options.signal?.addEventListener(
         "abort",
         () => reject(new AbortError()),
-        { signal: clean.signal }
+        { signal: clean.signal },
       );
 
       this.listeners.push(resolver);
@@ -168,7 +168,7 @@ class StreamManagerImpl {
 
   getQueue(
     runId: string,
-    options: { ifNotFound: "create"; resumable: boolean }
+    options: { ifNotFound: "create"; resumable: boolean },
   ): Queue {
     if (this.readers[runId] == null) {
       this.readers[runId] = new Queue(options);
@@ -207,7 +207,7 @@ const isObject = (value: unknown): value is Record<string, unknown> => {
 
 const isJsonbContained = (
   superset: Record<string, unknown> | undefined,
-  subset: Record<string, unknown> | undefined
+  subset: Record<string, unknown> | undefined,
 ): boolean => {
   if (superset == null || subset == null) return true;
   for (const [key, value] of Object.entries(subset)) {
@@ -238,7 +238,7 @@ export class FileSystemAssistants implements AssistantsRepo {
       limit: number;
       offset: number;
     },
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): AsyncGenerator<{ assistant: Assistant; total: number }> {
     const [filters] = await handleAuthEvent(auth, "assistants:search", {
       graph_id: options.graph_id,
@@ -290,7 +290,7 @@ export class FileSystemAssistants implements AssistantsRepo {
 
       for (const assistant of filtered.slice(
         options.offset,
-        options.offset + options.limit
+        options.offset + options.limit,
       )) {
         yield {
           assistant: {
@@ -305,7 +305,7 @@ export class FileSystemAssistants implements AssistantsRepo {
 
   async get(
     assistant_id: string,
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<Assistant> {
     const [filters] = await handleAuthEvent(auth, "assistants:read", {
       assistant_id,
@@ -333,7 +333,7 @@ export class FileSystemAssistants implements AssistantsRepo {
       name?: string;
       description?: string;
     },
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<Assistant> {
     const [filters, mutable] = await handleAuthEvent(
       auth,
@@ -347,7 +347,7 @@ export class FileSystemAssistants implements AssistantsRepo {
         if_exists: options.if_exists,
         name: options.name,
         description: options.description,
-      }
+      },
     );
 
     return this.conn.with((STORE) => {
@@ -406,7 +406,7 @@ export class FileSystemAssistants implements AssistantsRepo {
       name?: string;
       description?: string;
     },
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<Assistant> {
     const [filters, mutable] = await handleAuthEvent(
       auth,
@@ -418,7 +418,7 @@ export class FileSystemAssistants implements AssistantsRepo {
         metadata: options?.metadata,
         name: options?.name,
         description: options?.description,
-      }
+      },
     );
 
     return this.conn.with((STORE) => {
@@ -471,7 +471,7 @@ export class FileSystemAssistants implements AssistantsRepo {
         Math.max(
           ...STORE.assistant_versions
             .filter((v) => v["assistant_id"] === assistantId)
-            .map((v) => v["version"])
+            .map((v) => v["version"]),
         ) + 1;
 
       assistant.version = newVersion;
@@ -496,7 +496,7 @@ export class FileSystemAssistants implements AssistantsRepo {
   async delete(
     assistant_id: string,
     delete_threads: boolean,
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<string[]> {
     const [filters] = await handleAuthEvent(auth, "assistants:delete", {
       assistant_id,
@@ -516,7 +516,7 @@ export class FileSystemAssistants implements AssistantsRepo {
 
       // Cascade delete for assistant versions and crons and threads
       STORE.assistant_versions = STORE.assistant_versions.filter(
-        (v) => v["assistant_id"] !== assistant_id
+        (v) => v["assistant_id"] !== assistant_id,
       );
 
       for (const run of Object.values(STORE.runs)) {
@@ -540,7 +540,7 @@ export class FileSystemAssistants implements AssistantsRepo {
   async setLatest(
     assistant_id: string,
     version: number,
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<Assistant> {
     const [filters] = await handleAuthEvent(auth, "assistants:update", {
       assistant_id,
@@ -558,7 +558,7 @@ export class FileSystemAssistants implements AssistantsRepo {
       }
 
       const assistantVersion = STORE.assistant_versions.find(
-        (v) => v["assistant_id"] === assistant_id && v["version"] === version
+        (v) => v["assistant_id"] === assistant_id && v["version"] === version,
       );
 
       if (!assistantVersion)
@@ -587,7 +587,7 @@ export class FileSystemAssistants implements AssistantsRepo {
       offset: number;
       metadata?: Metadata;
     },
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ) {
     const [filters] = await handleAuthEvent(auth, "assistants:read", {
       assistant_id,
@@ -619,7 +619,7 @@ export class FileSystemAssistants implements AssistantsRepo {
 
   async count(
     options: { graph_id?: string; name?: string; metadata?: Metadata },
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<number> {
     const [filters] = await handleAuthEvent(auth, "assistants:search", {
       graph_id: options.graph_id,
@@ -681,7 +681,7 @@ export class FileSystemThreads implements ThreadsRepo {
       sort_by?: "thread_id" | "status" | "created_at" | "updated_at";
       sort_order?: "asc" | "desc";
     },
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): AsyncGenerator<{ thread: Thread; total: number }> {
     const [filters] = await handleAuthEvent(auth, "threads:search", {
       metadata: options.metadata,
@@ -744,7 +744,7 @@ export class FileSystemThreads implements ThreadsRepo {
 
       for (const thread of filtered.slice(
         options.offset,
-        options.offset + options.limit
+        options.offset + options.limit,
       )) {
         yield { thread, total };
       }
@@ -781,7 +781,7 @@ export class FileSystemThreads implements ThreadsRepo {
       metadata?: Metadata;
       if_exists: OnConflictBehavior;
     },
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<Thread> {
     const [filters, mutable] = await handleAuthEvent(auth, "threads:create", {
       thread_id,
@@ -823,7 +823,7 @@ export class FileSystemThreads implements ThreadsRepo {
   async patch(
     threadId: string,
     options: { metadata?: Metadata },
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<Thread> {
     const [filters, mutable] = await handleAuthEvent(auth, "threads:update", {
       thread_id: threadId,
@@ -859,7 +859,7 @@ export class FileSystemThreads implements ThreadsRepo {
     options: {
       checkpoint?: CheckpointPayload;
       exception?: Error;
-    }
+    },
   ) {
     return this.conn.with((STORE) => {
       const thread = STORE.threads[threadId];
@@ -872,7 +872,7 @@ export class FileSystemThreads implements ThreadsRepo {
       }
 
       const hasPendingRuns = Object.values(STORE.runs).some(
-        (run) => run["thread_id"] === threadId && run["status"] === "pending"
+        (run) => run["thread_id"] === threadId && run["status"] === "pending",
       );
 
       let status: ThreadStatus = "idle";
@@ -897,7 +897,7 @@ export class FileSystemThreads implements ThreadsRepo {
                 if (task.interrupts) acc[task.id] = task.interrupts;
                 return acc;
               },
-              {}
+              {},
             )
           : undefined;
     });
@@ -905,7 +905,7 @@ export class FileSystemThreads implements ThreadsRepo {
 
   async delete(
     thread_id: string,
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<string[]> {
     const [filters] = await handleAuthEvent(auth, "threads:delete", {
       thread_id,
@@ -939,7 +939,7 @@ export class FileSystemThreads implements ThreadsRepo {
 
   async copy(
     thread_id: string,
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<Thread> {
     const [filters] = await handleAuthEvent(auth, "threads:read", {
       thread_id,
@@ -985,7 +985,7 @@ export class FileSystemThreads implements ThreadsRepo {
       values?: Record<string, unknown>;
       status?: ThreadStatus;
     },
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<number> {
     const [filters] = await handleAuthEvent(auth, "threads:search", {
       metadata: options.metadata,
@@ -1031,7 +1031,7 @@ export class FileSystemThreads implements ThreadsRepo {
 
     constructor(
       conn: FileSystemPersistence<Store>,
-      threads: FileSystemThreads
+      threads: FileSystemThreads,
     ) {
       this.conn = conn;
       this.threads = threads;
@@ -1040,7 +1040,7 @@ export class FileSystemThreads implements ThreadsRepo {
     async get(
       config: RunnableConfig,
       options: { subgraphs?: boolean },
-      auth: AuthContext | undefined
+      auth: AuthContext | undefined,
     ): Promise<LangGraphStateSnapshot> {
       const subgraphs = options.subgraphs ?? false;
       const threadId = config.configurable?.thread_id;
@@ -1087,7 +1087,7 @@ export class FileSystemThreads implements ThreadsRepo {
         | null
         | undefined,
       asNode: string | undefined,
-      auth: AuthContext | undefined
+      auth: AuthContext | undefined,
     ): Promise<{ checkpoint: Record<string, unknown> | undefined }> {
       const threadId = config.configurable?.thread_id;
       const [filters] = await handleAuthEvent(auth, "threads:update", {
@@ -1112,7 +1112,7 @@ export class FileSystemThreads implements ThreadsRepo {
           Object.values(STORE.runs).some(
             (run) =>
               run.thread_id === threadId &&
-              (run.status === "pending" || run.status === "running")
+              (run.status === "pending" || run.status === "running"),
           )
         ) {
           throw new HTTPException(409, { message: "Thread is busy" });
@@ -1169,7 +1169,7 @@ export class FileSystemThreads implements ThreadsRepo {
           as_node?: string | undefined;
         }>;
       }>,
-      auth: AuthContext | undefined
+      auth: AuthContext | undefined,
     ): Promise<
       { checkpoint: Record<string, unknown> | undefined } | unknown[]
     > {
@@ -1213,7 +1213,7 @@ export class FileSystemThreads implements ThreadsRepo {
               j.command != null ? getLangGraphCommand(j.command) : j.values,
             asNode: j.as_node,
           })),
-        }))
+        })),
       );
       const state = await this.get(config, { subgraphs: false }, auth);
 
@@ -1237,7 +1237,7 @@ export class FileSystemThreads implements ThreadsRepo {
         before?: string | RunnableConfig;
         metadata?: Metadata;
       },
-      auth: AuthContext | undefined
+      auth: AuthContext | undefined,
     ) {
       const threadId = config.configurable?.thread_id;
       if (!threadId) return [];
@@ -1324,7 +1324,7 @@ export class FileSystemRuns implements RunsRepo {
           if (run.status !== "pending") continue;
           if (
             Object.values(STORE.runs).some(
-              (run) => run.thread_id === threadId && run.status === "running"
+              (run) => run.thread_id === threadId && run.status === "running",
             )
           ) {
             continue;
@@ -1357,7 +1357,7 @@ export class FileSystemRuns implements RunsRepo {
       ifNotExists?: IfNotExists;
       afterSeconds?: number;
     },
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<Run[]> {
     return this.conn.with(async (STORE) => {
       const assistant = STORE.assistants[assistantId];
@@ -1388,14 +1388,14 @@ export class FileSystemRuns implements RunsRepo {
           if_not_exists: ifNotExists,
           after_seconds: afterSeconds,
           kwargs,
-        }
+        },
       );
 
       const metadata = mutable.metadata ?? {};
       const config: RunnableConfig = kwargs.config ?? {};
 
       const existingThread = Object.values(STORE.threads).find(
-        (thread) => thread.thread_id === threadId
+        (thread) => thread.thread_id === threadId,
       );
 
       if (
@@ -1421,7 +1421,7 @@ export class FileSystemRuns implements RunsRepo {
             configurable: Object.assign(
               {},
               assistant.config?.configurable,
-              config?.configurable
+              config?.configurable,
             ),
           }),
           created_at: now,
@@ -1446,9 +1446,9 @@ export class FileSystemRuns implements RunsRepo {
                 {},
                 assistant.config?.configurable,
                 existingThread?.config?.configurable,
-                config?.configurable
+                config?.configurable,
               ),
-            }
+            },
           );
 
           existingThread.updated_at = now;
@@ -1462,7 +1462,7 @@ export class FileSystemRuns implements RunsRepo {
       const inflightRuns = Object.values(STORE.runs).filter(
         (run) =>
           run.thread_id === threadId &&
-          (run.status === "pending" || run.status === "running")
+          (run.status === "pending" || run.status === "running"),
       );
 
       if (options?.preventInsertInInflight) {
@@ -1485,14 +1485,14 @@ export class FileSystemRuns implements RunsRepo {
             existingThread?.config?.configurable?.user_id ??
             assistant.config?.configurable?.user_id ??
             options?.userId,
-        }
+        },
       );
 
       const mergedMetadata = Object.assign(
         {},
         assistant.metadata,
         existingThread?.metadata,
-        metadata
+        metadata,
       );
 
       const newRun: Run = {
@@ -1507,11 +1507,11 @@ export class FileSystemRuns implements RunsRepo {
             assistant.config,
             config,
             { configurable },
-            { metadata: mergedMetadata }
+            { metadata: mergedMetadata },
           ),
           context:
             typeof assistant.context !== "object" && assistant.context != null
-              ? assistant.context ?? kwargs.context
+              ? (assistant.context ?? kwargs.context)
               : Object.assign({}, assistant.context, kwargs.context),
         }),
         multitask_strategy: multitaskStrategy,
@@ -1527,7 +1527,7 @@ export class FileSystemRuns implements RunsRepo {
   async get(
     runId: string,
     thread_id: string | undefined,
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<Run | null> {
     const [filters] = await handleAuthEvent(auth, "threads:read", {
       thread_id,
@@ -1554,7 +1554,7 @@ export class FileSystemRuns implements RunsRepo {
   async delete(
     run_id: string,
     thread_id: string | undefined,
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<string | null> {
     const [filters] = await handleAuthEvent(auth, "threads:delete", {
       run_id,
@@ -1582,13 +1582,13 @@ export class FileSystemRuns implements RunsRepo {
   async wait(
     runId: string,
     threadId: string | undefined,
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ) {
     const runStream = this.stream.join(
       runId,
       threadId,
       { ignore404: threadId == null, lastEventId: undefined },
-      auth
+      auth,
     );
 
     const lastChunk = new Promise(async (resolve, reject) => {
@@ -1628,7 +1628,7 @@ export class FileSystemRuns implements RunsRepo {
     options: {
       action?: "interrupt" | "rollback";
     },
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ) {
     return this.conn.with(async (STORE) => {
       const action = options.action ?? "interrupt";
@@ -1673,7 +1673,7 @@ export class FileSystemRuns implements RunsRepo {
               {
                 run_id: runId,
                 thread_id: threadId,
-              }
+              },
             );
 
             promises.push(this.delete(runId, threadId, auth));
@@ -1708,7 +1708,7 @@ export class FileSystemRuns implements RunsRepo {
       status?: string | null;
       metadata?: Metadata | null;
     },
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ) {
     const [filters] = await handleAuthEvent(auth, "threads:search", {
       thread_id: threadId,
@@ -1764,7 +1764,7 @@ export class FileSystemRuns implements RunsRepo {
         cancelOnDisconnect?: AbortSignal;
         lastEventId: string | undefined;
       },
-      auth: AuthContext | undefined
+      auth: AuthContext | undefined,
     ): AsyncGenerator<{ id?: string; event: string; data: unknown }> {
       const conn = this.conn;
       const runs = this.runs;
@@ -1808,7 +1808,7 @@ export class FileSystemRuns implements RunsRepo {
               if (message.data === "done") break;
             } else {
               const streamTopic = message.topic.substring(
-                `run:${runId}:stream:`.length
+                `run:${runId}:stream:`.length,
               );
 
               yield { id, event: streamTopic, data: message.data };

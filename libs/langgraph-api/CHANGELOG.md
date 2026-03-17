@@ -50,13 +50,11 @@
 ### Patch Changes
 
 - [#1939](https://github.com/langchain-ai/langgraphjs/pull/1939) [`ad39dcf`](https://github.com/langchain-ai/langgraphjs/commit/ad39dcfddf575a5e5438cd40b284ac0d549b5827) Thanks [@hntrl](https://github.com/hntrl)! - Enhanced JSON schema extraction for Studio with multi-tier strategy:
-
   - **StateSchema support**: Extract schemas from `StateSchema` instances using `getJsonSchema()` and `getInputJsonSchema()` methods, preserving `jsonSchemaExtra` metadata (e.g., `langgraph_type: "messages"`)
   - **Improved Zod handling**: Fall back to Zod registry extraction for `withLangGraph()` schemas, then direct Zod conversion for plain Zod schemas
   - **Reduced reliance on TypeScript parser**: Only fall back to the brittle TypeScript AST parser when all runtime extraction methods fail
 
   Extraction priority:
-
   1. StateSchema (handles `jsonSchemaExtra` via `ReducedValue`)
   2. Zod via `schemaMetaRegistry` (handles `jsonSchemaExtra` from `withLangGraph()`)
   3. Direct Zod conversion (no `jsonSchemaExtra`, but better than static parsing)
@@ -259,12 +257,10 @@
 
 - 30bcfcd: Assume `http` protocol only when accessing UI components from frontend served from `localhost` or `127.0.0.1` (#1596, #1573)
 - 572de43: feat(threads): add `ids` filter to Threads.search
-
   - SDK: `ThreadsClient.search` now accepts `ids?: string[]` and forwards it to `/threads/search`.
   - API: `/threads/search` schema accepts `ids` and storage filters by provided thread IDs.
 
   This enables fetching a specific set of threads directly via the search endpoint, while remaining backward compatible.
-
   - @langchain/langgraph-ui@0.0.64
 
 ## 0.0.63

@@ -27,11 +27,11 @@ program
 program
   .command("config")
   .description(
-    "Generate a langgraph.json configuration file by scanning for agents"
+    "Generate a langgraph.json configuration file by scanning for agents",
   )
   .argument(
     "[path]",
-    "Path to the project to scan (defaults to current directory)"
+    "Path to the project to scan (defaults to current directory)",
   )
   .hook("preAction", withAnalytics())
   .action((path) => {

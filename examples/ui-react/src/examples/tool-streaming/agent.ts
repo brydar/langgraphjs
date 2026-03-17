@@ -57,7 +57,7 @@ const searchFlightsTool = tool(
     description:
       "Search for available flights to a destination on a given date",
     schema: searchFlightsSchema,
-  }
+  },
 );
 
 const checkHotelAvailabilitySchema = z.object({
@@ -104,7 +104,7 @@ const checkHotelAvailabilityTool = tool(
       rating: (Math.random() * 2 + 3).toFixed(1),
       amenities: ["WiFi", "Pool", "Gym", "Restaurant"].slice(
         0,
-        Math.floor(Math.random() * 3) + 2
+        Math.floor(Math.random() * 3) + 2,
       ),
     }));
 
@@ -114,7 +114,7 @@ const checkHotelAvailabilityTool = tool(
     name: "check_hotel_availability",
     description: "Check hotel availability in a city for given dates",
     schema: checkHotelAvailabilitySchema,
-  }
+  },
 );
 
 const planItinerarySchema = z.object({
@@ -151,7 +151,7 @@ const planItineraryTool = tool(
       await new Promise((r) => setTimeout(r, 700));
       const dayActivities = Array.from(
         { length: Math.floor(Math.random() * 2) + 2 },
-        () => activities[Math.floor(Math.random() * activities.length)]
+        () => activities[Math.floor(Math.random() * activities.length)],
       );
       const theme = interests[i % interests.length] ?? "exploration";
       completed.push(`Day ${i + 1} (${theme}): ${dayActivities.join(", ")}`);
@@ -182,7 +182,7 @@ const planItineraryTool = tool(
     description:
       "Create a day-by-day travel itinerary for a destination based on interests",
     schema: planItinerarySchema,
-  }
+  },
 );
 
 export const agent = createAgent({

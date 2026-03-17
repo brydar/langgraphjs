@@ -173,7 +173,7 @@ export function getReasoningFromMessage(message: Message): string | undefined {
           "type" in block &&
           block.type === "reasoning" &&
           "reasoning" in block &&
-          typeof block.reasoning === "string"
+          typeof block.reasoning === "string",
       )
       .map((block) => block.reasoning)
       .join("");

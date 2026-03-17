@@ -140,7 +140,7 @@ export async function authenticate(request: Request) {
       }
 
       throw new Error(
-        "Invalid auth response received. Make sure to either return a `string` or an object with `identity` property."
+        "Invalid auth response received. Make sure to either return a `string` or an object with `identity` property.",
       );
     })();
 
@@ -152,7 +152,7 @@ export async function authenticate(request: Request) {
 
 export async function registerAuth(
   auth: { path?: string; disable_studio_auth?: boolean },
-  options: { cwd: string }
+  options: { cwd: string },
 ) {
   if (!auth.path) return;
 
@@ -161,7 +161,7 @@ export async function registerAuth(
   const sourceFile = path.resolve(options.cwd, userFile);
 
   const module = (await import(url.pathToFileURL(sourceFile).toString()).then(
-    (module) => module[exportSymbol || "default"]
+    (module) => module[exportSymbol || "default"],
   )) as Auth | undefined;
 
   if (!module) throw new Error(`Failed to load auth: ${auth.path}`);
@@ -175,7 +175,7 @@ export async function registerAuth(
 export const handleAuthEvent = async <T extends keyof AuthEventValueMap>(
   context: AuthContext | undefined,
   event: T,
-  value: AuthEventValueMap[T]
+  value: AuthEventValueMap[T],
 ): Promise<[AuthFilters | undefined, value: AuthEventValueMap[T]]> => {
   const [resource, action] = event.split(":");
   const result = await authorize({
@@ -187,13 +187,13 @@ export const handleAuthEvent = async <T extends keyof AuthEventValueMap>(
 
   return [result.filters, result.value] as [
     AuthFilters | undefined,
-    value: AuthEventValueMap[T]
+    value: AuthEventValueMap[T],
   ];
 };
 
 export function isAuthMatching(
   metadata: Record<string, unknown> | undefined,
-  filters: AuthFilters
+  filters: AuthFilters,
 ) {
   if (filters == null) return true;
   for (const [key, value] of Object.entries(filters)) {
@@ -208,7 +208,7 @@ export function isAuthMatching(
           // Match Postgres list containment semantics (at the top level).
           if (
             !value.$contains.every((v) =>
-              (metadata?.[key] as unknown[]).includes(v)
+              (metadata?.[key] as unknown[]).includes(v),
             )
           ) {
             return false;

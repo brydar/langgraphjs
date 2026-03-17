@@ -36,7 +36,7 @@ function hasContent(message: Message): boolean {
   }
   if (Array.isArray(message.content)) {
     return message.content.some(
-      (c) => c.type === "text" && c.text.trim().length > 0
+      (c) => c.type === "text" && c.text.trim().length > 0,
     );
   }
   return false;
@@ -120,7 +120,7 @@ export function BranchingChat() {
     (content: string) => {
       stream.submit({ messages: [{ content, type: "human" }] });
     },
-    [stream]
+    [stream],
   );
 
   /**
@@ -129,7 +129,7 @@ export function BranchingChat() {
   const handleEditMessage = useCallback(
     (
       message: Message<InferAgentToolCalls<typeof agent>>,
-      newContent: string
+      newContent: string,
     ) => {
       const meta = stream.getMessagesMetadata(message);
       const parentCheckpoint = meta?.firstSeenState?.parent_checkpoint;
@@ -137,11 +137,11 @@ export function BranchingChat() {
       // Submit from the parent checkpoint with the new message content
       stream.submit(
         { messages: [{ content: newContent, type: "human" }] },
-        { checkpoint: parentCheckpoint }
+        { checkpoint: parentCheckpoint },
       );
       setEditingMessageId(null);
     },
-    [stream]
+    [stream],
   );
 
   /**
@@ -155,7 +155,7 @@ export function BranchingChat() {
       // Submit with undefined to regenerate from the parent checkpoint
       stream.submit(undefined, { checkpoint: parentCheckpoint });
     },
-    [stream]
+    [stream],
   );
 
   return (
@@ -318,7 +318,7 @@ export function BranchingChat() {
               {/* Show loading indicator when streaming */}
               {stream.isLoading &&
                 !stream.messages.some(
-                  (m) => m.type === "ai" && hasContent(m)
+                  (m) => m.type === "ai" && hasContent(m),
                 ) &&
                 stream.toolCalls.length === 0 && <LoadingIndicator />}
             </div>

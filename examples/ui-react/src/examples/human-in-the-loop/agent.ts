@@ -26,7 +26,7 @@ export const sendEmail = tool(
       subject: z.string().describe("The email subject line"),
       body: z.string().describe("The email body content"),
     }),
-  }
+  },
 );
 
 /**
@@ -48,7 +48,7 @@ export const deleteFile = tool(
     schema: z.object({
       path: z.string().describe("The file path to delete"),
     }),
-  }
+  },
 );
 
 /**
@@ -72,7 +72,7 @@ export const readFile = tool(
     schema: z.object({
       path: z.string().describe("The file path to read"),
     }),
-  }
+  },
 );
 
 /**

@@ -15,7 +15,7 @@ const BaseConfigSchema = z.object({
         path: GraphPathSchema,
         description: z.string().optional(),
       }),
-    ])
+    ]),
   ),
   ui: z.record(z.string()).optional(),
   ui_config: z.object({ shared: z.array(z.string()).optional() }).optional(),
@@ -32,7 +32,7 @@ const BaseConfigSchema = z.object({
       {
         message:
           "api_version must be in format major, major.minor, or major.minor.patch",
-      }
+      },
     )
     .optional(),
   env: z
@@ -91,16 +91,16 @@ const PythonConfigSchema = BaseConfigSchema.merge(
     dependencies: z
       .array(z.string())
       .nonempty("You need to specify at least one dependency"),
-  })
+  }),
 ).merge(
   z.object({
     python_version: PythonVersionSchema.default(DEFAULT_PYTHON_VERSION),
     node_version: NodeVersionSchema.optional(),
-  })
+  }),
 );
 
 const NodeConfigSchema = BaseConfigSchema.merge(
-  z.object({ node_version: NodeVersionSchema.default(DEFAULT_NODE_VERSION) })
+  z.object({ node_version: NodeVersionSchema.default(DEFAULT_NODE_VERSION) }),
 );
 
 const ConfigSchema = z.union([NodeConfigSchema, PythonConfigSchema]);
@@ -112,7 +112,7 @@ export const getConfig = (config: z.input<typeof ConfigSchema> | string) => {
 
   if (input.api_version && input._INTERNAL_docker_tag) {
     throw new Error(
-      "Cannot specify both _INTERNAL_docker_tag and api_version."
+      "Cannot specify both _INTERNAL_docker_tag and api_version.",
     );
   }
 

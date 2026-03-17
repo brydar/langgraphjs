@@ -2,7 +2,6 @@
 /* eslint-disable no-promise-executor-return */
 /* eslint-disable no-instanceof/no-instanceof */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable prefer-template */
 /* eslint-disable no-param-reassign */
 import {

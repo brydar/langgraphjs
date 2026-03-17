@@ -62,7 +62,7 @@ const threads = (() => {
         .filter((thread) => {
           if (options.metadata != null) {
             return Object.entries(options.metadata).every(
-              ([key, value]) => thread.metadata[key] === value
+              ([key, value]) => thread.metadata[key] === value,
             );
           }
 
@@ -95,14 +95,14 @@ const server = createEmbedServer({
   graph: {
     agent: await import("./graphs/agent.mjs").then((m) => m.graph),
     agent_with_tools: await import("./graphs/agent_with_tools.mjs").then(
-      (m) => m.graph
+      (m) => m.graph,
     ),
     nested: await import("./graphs/nested.mjs").then((m) => m.graph),
     weather: await import("./graphs/weather.mjs").then((m) => m.graph),
     error: await import("./graphs/error.mjs").then((m) => m.graph),
     delay: await import("./graphs/delay.mjs").then((m) => m.graph),
     simple_runtime: await import("./graphs/simple_runtime.mjs").then(
-      (m) => m.graph
+      (m) => m.graph,
     ),
   },
   checkpointer: new MemorySaver(),
@@ -233,7 +233,7 @@ describe("runs", () => {
 
       if (chunk.event === "values") {
         const messageIds = chunk.data.messages.map(
-          (message: { id: string }) => message.id
+          (message: { id: string }) => message.id,
         );
         expect(messageIds.slice(0, -1)).toEqual(previousMessageIds);
         previousMessageIds = messageIds;
@@ -290,15 +290,15 @@ describe("runs", () => {
 
     const events = await gatherIterator(stream);
     expect(new Set(events.map((i) => i.event))).toEqual(
-      new Set(["metadata", "events"])
+      new Set(["metadata", "events"]),
     );
 
     expect(
       new Set(
         events
           .filter((i) => i.event === "events")
-          .map((i) => (i.data as any).event)
-      )
+          .map((i) => (i.data as any).event),
+      ),
     ).toEqual(
       new Set([
         "on_chain_start",
@@ -306,7 +306,7 @@ describe("runs", () => {
         "on_chat_model_end",
         "on_chat_model_start",
         "on_chat_model_stream",
-      ])
+      ]),
     );
   });
 
@@ -354,7 +354,7 @@ describe("runs", () => {
         "messages/metadata",
         "messages/partial",
         "messages/complete",
-      ])
+      ]),
     );
   });
 
@@ -378,7 +378,7 @@ describe("runs", () => {
     const messages = chunks
       .filter(
         (i): i is MessagesTupleStreamEvent =>
-          i.event.startsWith("messages|") || i.event === "messages"
+          i.event.startsWith("messages|") || i.event === "messages",
       )
       .map((i) => i.data[0]);
 
@@ -410,7 +410,7 @@ describe("runs", () => {
 
     const messages: BaseMessage[] = findLast(
       chunks,
-      (i) => i.event === "values"
+      (i) => i.event === "values",
     )?.data.messages;
 
     expect(messages.length).toBe(4);
@@ -427,7 +427,7 @@ describe("runs", () => {
         "messages/partial",
         "messages/complete",
         "values",
-      ])
+      ]),
     );
   });
 
@@ -449,7 +449,7 @@ describe("runs", () => {
           input,
           interruptBefore: ["tool"],
           config: globalConfig,
-        })
+        }),
       );
 
       expect(chunks.filter((i) => i.event === "error").length).toBe(0);
@@ -457,7 +457,7 @@ describe("runs", () => {
         findLast(
           chunks,
           (i): i is { event: "values"; data: { messages: BaseMessage[] } } =>
-            i.event === "values" && "messages" in i.data
+            i.event === "values" && "messages" in i.data,
         )?.data.messages ?? [];
 
       expect(messages.at(-1)).not.toBeNull();
@@ -471,7 +471,7 @@ describe("runs", () => {
         client.runs.stream(thread.thread_id, graphId, {
           input: null,
           config: globalConfig,
-        })
+        }),
       );
 
       expect(chunks.filter((i) => i.event === "error").length).toBe(0);
@@ -480,7 +480,7 @@ describe("runs", () => {
       expect(messages.length).toBe(4);
       expect(messages[2].content).toBe("tool_call__begin");
       expect(messages.at(-1)?.content).toBe("end");
-    }
+    },
   );
 
   it.concurrent("human in the loop - modification", async () => {
@@ -498,7 +498,7 @@ describe("runs", () => {
         input,
         interruptBefore: ["tool"],
         config: globalConfig,
-      })
+      }),
     );
 
     expect(chunks.filter((i) => i.event === "error").length).toBe(0);
@@ -508,7 +508,7 @@ describe("runs", () => {
       findLast(
         chunks,
         (i): i is { event: "values"; data: { messages: BaseMessage[] } } =>
-          i.event === "values" && "messages" in i.data
+          i.event === "values" && "messages" in i.data,
       )?.data.messages.at(-1) ?? null;
 
     if (!lastMessage) throw new Error("No last message");
@@ -523,7 +523,7 @@ describe("runs", () => {
     });
 
     const stateAfterModify = await client.threads.getState<AgentState>(
-      thread.thread_id
+      thread.thread_id,
     );
     expect(stateAfterModify.values.messages.at(-1)?.content).toBe("modified");
     expect(stateAfterModify.next).toEqual(["tool"]);
@@ -536,7 +536,7 @@ describe("runs", () => {
       client.runs.stream(thread.thread_id, graphId, {
         input: null,
         config: globalConfig,
-      })
+      }),
     );
 
     expect(chunks.filter((i) => i.event === "error").length).toBe(0);
@@ -548,7 +548,7 @@ describe("runs", () => {
 
     // get the history
     const history = await client.threads.getHistory<AgentState>(
-      thread.thread_id
+      thread.thread_id,
     );
     expect(history.length).toBe(6);
     expect(history[0].next.length).toBe(0);
@@ -561,7 +561,7 @@ describe("runs", () => {
     const stream = await gatherIterator(
       client.runs.stream(thread.thread_id, "error", {
         input: { messages: [] },
-      })
+      }),
     );
 
     expect(stream.at(-1)).toMatchObject({
@@ -588,7 +588,7 @@ describe("subgraphs", () => {
           messages: [{ role: "human", content: "SF", id: "initial-message" }],
         },
         interruptBefore: ["tool"],
-      })
+      }),
     );
 
     for (const chunk of chunks) {
@@ -666,7 +666,7 @@ describe("subgraphs", () => {
     const stateRecursive = await client.threads.getState(
       thread.thread_id,
       undefined,
-      { subgraphs: true }
+      { subgraphs: true },
     );
 
     expect(stateRecursive.next).toEqual(["weather_graph"]);
@@ -722,14 +722,14 @@ describe("subgraphs", () => {
         input: null,
         streamMode: ["values", "updates"],
         streamSubgraphs: true,
-      })
+      }),
     );
 
     expect(chunksSubgraph.filter((i) => i.event === "error")).toEqual([]);
     expect(chunksSubgraph.at(-1)?.event).toBe("values");
 
     const continueMessages = chunksSubgraph.findLast(
-      (i) => i.event === "values"
+      (i) => i.event === "values",
     )?.data.messages;
 
     expect(continueMessages.length).toBe(2);
@@ -874,7 +874,7 @@ describe("subgraphs", () => {
 
     // run until the interrupt (same as before)
     let chunks = await gatherIterator(
-      client.runs.stream(thread.thread_id, graphId, { input })
+      client.runs.stream(thread.thread_id, graphId, { input }),
     );
     expect(chunks.filter((i) => i.event === "error")).toEqual([]);
 
@@ -906,7 +906,7 @@ describe("subgraphs", () => {
     // get inner state after update
     const innerState = await client.threads.getState<{ city: string }>(
       thread.thread_id,
-      state.tasks[0].checkpoint ?? undefined
+      state.tasks[0].checkpoint ?? undefined,
     );
 
     expect(innerState.values.city).toBe("LA");
@@ -928,7 +928,7 @@ describe("subgraphs", () => {
     chunks = await gatherIterator(
       client.runs.stream(thread.thread_id, graphId, {
         input: null,
-      })
+      }),
     );
 
     expect(chunks.filter((i) => i.event === "error")).toEqual([]);
@@ -974,7 +974,7 @@ describe("subgraphs", () => {
           interrupt: true,
         },
         config: globalConfig,
-      })
+      }),
     );
 
     const state = await client.threads.getState(thread.thread_id);
@@ -1000,7 +1000,7 @@ describe("subgraphs", () => {
     const stream = await gatherIterator(
       client.runs.stream(thread.thread_id, graphId, {
         command: { resume: "i want to resume" },
-      })
+      }),
     );
 
     expect(stream.at(-1)?.event).toBe("values");
@@ -1025,14 +1025,14 @@ describe("command update state", () => {
       client.runs.stream(thread.thread_id, graphId, {
         input,
         config: globalConfig,
-      })
+      }),
     );
 
     let stream = await gatherIterator(
       client.runs.stream(thread.thread_id, graphId, {
         command: { update: { keyOne: "value3", keyTwo: "value4" } },
         config: globalConfig,
-      })
+      }),
     );
     expect(stream.filter((chunk) => chunk.event === "error")).toEqual([]);
 
@@ -1055,7 +1055,7 @@ describe("command update state", () => {
       client.runs.stream(thread.thread_id, "agent", {
         input,
         config: globalConfig,
-      })
+      }),
     );
 
     const stream = await gatherIterator(
@@ -1067,7 +1067,7 @@ describe("command update state", () => {
           ],
         },
         config: globalConfig,
-      })
+      }),
     );
     expect(stream.filter((chunk) => chunk.event === "error")).toEqual([]);
 
@@ -1103,13 +1103,13 @@ it("stream debug checkpoint", async () => {
       step: i.metadata?.step,
       checkpoint: i.checkpoint,
       parent_checkpoint: i.parent_checkpoint,
-    }))
+    })),
   ).toEqual(
     history.map((i) => ({
       step: i.metadata?.step,
       checkpoint: i.checkpoint,
       parent_checkpoint: i.parent_checkpoint,
-    }))
+    })),
   );
 });
 
@@ -1126,12 +1126,12 @@ it("continue after interrupt must have checkpoint present", async () => {
       input,
       streamMode: "debug",
       interruptBefore: ["router_node"],
-    })
+    }),
   );
 
   const initialStream = stream
     .filter(
-      (i) => i.event === "debug" && (i.data as any)?.type === "checkpoint"
+      (i) => i.event === "debug" && (i.data as any)?.type === "checkpoint",
     )
     .map((i) => (i.data as any)?.payload);
 
@@ -1143,7 +1143,7 @@ it("continue after interrupt must have checkpoint present", async () => {
     client.runs.stream(thread.thread_id, graphId, {
       streamMode: "debug",
       checkpoint,
-    })
+    }),
   );
 
   const continueHistory = (
@@ -1159,13 +1159,13 @@ it("continue after interrupt must have checkpoint present", async () => {
       step: i.metadata?.step,
       checkpoint: i.checkpoint,
       parent_checkpoint: i.parent_checkpoint,
-    }))
+    })),
   ).toEqual(
     continueHistory.map((i) => ({
       step: i.metadata?.step,
       checkpoint: i.checkpoint,
       parent_checkpoint: i.parent_checkpoint,
-    }))
+    })),
   );
 });
 
@@ -1177,7 +1177,7 @@ it("tasks / checkpoints stream mode", async () => {
       input: { messages: [{ role: "human", content: "input" }] },
       streamMode: ["tasks", "checkpoints"],
       config: globalConfig,
-    })
+    }),
   );
 
   expect(stream).toMatchObject([
@@ -1340,7 +1340,7 @@ it("tools stream mode emits tool lifecycle events", async () => {
       input: { messages: [{ role: "human", content: "input" }] },
       streamMode: ["values", "tools"],
       config: globalConfig,
-    })
+    }),
   );
 
   const toolsEvents = stream.filter(
@@ -1348,7 +1348,7 @@ it("tools stream mode emits tool lifecycle events", async () => {
       (e.event === "tools" || String(e.event).startsWith("tools|")) &&
       typeof e.data === "object" &&
       e.data != null &&
-      "event" in e.data
+      "event" in e.data,
   );
 
   expect(toolsEvents.length).toBeGreaterThanOrEqual(1);
@@ -1364,7 +1364,7 @@ describe("runtime API", () => {
       client.runs.stream(thread.thread_id, "simple_runtime", {
         input: { messages: [{ role: "human", content: "input" }] },
         context: { model: "openai" },
-      })
+      }),
     );
 
     const values = stream

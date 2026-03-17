@@ -40,7 +40,7 @@ export function ResearchCard({
                   config.borderColor
                 } ring-2 ring-offset-2 ring-offset-black ${config.borderColor.replace(
                   "border",
-                  "ring"
+                  "ring",
                 )}`
               : "border-neutral-800 hover:border-neutral-700"
           }

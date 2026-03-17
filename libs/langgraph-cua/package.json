@@ -18,7 +18,7 @@
     "build": "pnpm turbo build:internal",
     "build:internal": "pnpm --filter @langchain/build compile @langchain/langgraph-cua",
     "clean": "rm -rf dist/ dist-cjs/ .turbo/",
-    "lint:eslint": "NODE_OPTIONS=--max-old-space-size=4096 eslint --cache --ext .ts,.js src/",
+    "lint:eslint": "NODE_OPTIONS=--max-old-space-size=4096 eslint --cache src/",
     "lint:dpdm": "dpdm --exit-code circular:1 --no-warning --no-tree src/*.ts src/**/*.ts",
     "lint": "pnpm lint:eslint && pnpm lint:dpdm",
     "lint:fix": "pnpm lint:eslint --fix && pnpm lint:dpdm",

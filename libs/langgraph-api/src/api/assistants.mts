@@ -28,7 +28,7 @@ const RunnableConfigSchema = z.object({
 });
 
 const getRunnableConfig = (
-  userConfig: z.infer<typeof RunnableConfigSchema> | null | undefined
+  userConfig: z.infer<typeof RunnableConfigSchema> | null | undefined,
 ) => {
   if (!userConfig) return {};
   return {
@@ -59,11 +59,11 @@ api.post(
         name: payload.name ?? "Untitled",
         description: payload.description,
       },
-      c.var.auth
+      c.var.auth,
     );
 
     return c.json(assistant);
-  }
+  },
 );
 
 api.post(
@@ -86,14 +86,14 @@ api.post(
         sort_order: payload.sort_order,
         select: payload.select as AssistantSelectField[],
       },
-      c.var.auth
+      c.var.auth,
     )) {
       result.push(
         Object.fromEntries(
           Object.entries(item.assistant).filter(
-            ([k]) => !payload.select || payload.select.includes(k)
-          )
-        )
+            ([k]) => !payload.select || payload.select.includes(k),
+          ),
+        ),
       );
       if (total === 0) {
         total = item.total;
@@ -102,20 +102,20 @@ api.post(
     if (total === payload.limit) {
       c.res.headers.set(
         "X-Pagination-Next",
-        ((payload.offset ?? 0) + total).toString()
+        ((payload.offset ?? 0) + total).toString(),
       );
       c.res.headers.set(
         "X-Pagination-Total",
-        ((payload.offset ?? 0) + total + 1).toString()
+        ((payload.offset ?? 0) + total + 1).toString(),
       );
     } else {
       c.res.headers.set(
         "X-Pagination-Total",
-        ((payload.offset ?? 0) + total).toString()
+        ((payload.offset ?? 0) + total).toString(),
       );
     }
     return c.json(result);
-  }
+  },
 );
 
 api.post(
@@ -125,7 +125,7 @@ api.post(
     const payload = c.req.valid("json");
     const total = await assistants().count(payload, c.var.auth);
     return c.json(total);
-  }
+  },
 );
 
 api.get("/assistants/:assistant_id", async (c) => {
@@ -139,7 +139,7 @@ api.delete("/assistants/:assistant_id", async (c) => {
   const assistantId = getAssistantId(c.req.param("assistant_id"));
   const deleteThreads = c.req.query("delete_threads") === "true";
   return c.json(
-    await assistants().delete(assistantId, deleteThreads, c.var.auth)
+    await assistants().delete(assistantId, deleteThreads, c.var.auth),
   );
 });
 
@@ -152,7 +152,7 @@ api.patch(
     const payload = c.req.valid("json");
 
     return c.json(await assistants().patch(assistantId, payload, c.var.auth));
-  }
+  },
 );
 
 api.get(
@@ -171,7 +171,7 @@ api.get(
       xray: xray ?? undefined,
     });
     return c.json(drawable.toJSON());
-  }
+  },
 );
 
 api.get(
@@ -191,7 +191,7 @@ api.get(
       if (runtimeSchema) return runtimeSchema;
       const graphSchema = await getCachedStaticGraphSchema(assistant.graph_id);
       const rootGraphId = Object.keys(graphSchema).find(
-        (i) => !i.includes("|")
+        (i) => !i.includes("|"),
       );
 
       if (!rootGraphId)
@@ -210,14 +210,14 @@ api.get(
       // thus we use config_schema for context_schema.
       context_schema: schema.config,
     });
-  }
+  },
 );
 
 api.get(
   "/assistants/:assistant_id/subgraphs/:namespace?",
   zValidator(
     "param",
-    z.object({ assistant_id: z.string(), namespace: z.string().optional() })
+    z.object({ assistant_id: z.string(), namespace: z.string().optional() }),
   ),
   zValidator("query", z.object({ recurse: schemas.coercedBoolean.optional() })),
   async (c) => {
@@ -251,7 +251,7 @@ api.get(
         const graphSchema = await graphSchemaPromise;
 
         const rootGraphId = Object.keys(graphSchema).find(
-          (i) => !i.includes("|")
+          (i) => !i.includes("|"),
         );
         if (!rootGraphId) {
           throw new HTTPException(404, {
@@ -266,7 +266,7 @@ api.get(
     }
 
     return c.json(Object.fromEntries(result));
-  }
+  },
 );
 
 api.post(
@@ -277,9 +277,9 @@ api.post(
     const assistantId = getAssistantId(c.req.param("assistant_id"));
     const { version } = c.req.valid("json");
     return c.json(
-      await assistants().setLatest(assistantId, version, c.var.auth)
+      await assistants().setLatest(assistantId, version, c.var.auth),
     );
-  }
+  },
 );
 
 api.post(
@@ -290,7 +290,7 @@ api.post(
       limit: z.number().min(1).max(1000).optional().default(10),
       offset: z.number().min(0).optional().default(0),
       metadata: z.record(z.unknown()).optional(),
-    })
+    }),
   ),
   async (c) => {
     // Get Assistant Versions
@@ -299,7 +299,7 @@ api.post(
     const versions = await assistants().getVersions(
       assistantId,
       { limit, offset, metadata },
-      c.var.auth
+      c.var.auth,
     );
 
     if (!versions?.length) {
@@ -309,7 +309,7 @@ api.post(
     }
 
     return c.json(versions);
-  }
+  },
 );
 
 export default api;

@@ -1,5 +1,4 @@
 /* eslint-disable no-promise-executor-return */
-/* eslint-disable import/no-extraneous-dependencies */
 import { expect, it } from "vitest";
 import { Graph as DrawableGraph } from "@langchain/core/runnables/graph";
 import {
@@ -307,7 +306,7 @@ export async function dumpDebugStream<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ContextType extends Record<string, any> = StrRecord<string, any>,
   InputType = PregelInputType,
-  OutputType = PregelOutputType
+  OutputType = PregelOutputType,
 >(
   graph: Pregel<Nn, Cc, ContextType, InputType, OutputType>,
   input: InputType,

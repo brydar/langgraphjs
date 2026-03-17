@@ -8,8 +8,8 @@ const configPath = fileURLToPath(
   new URL(
     process.argv.findLast((arg) => arg.endsWith(".json")) ??
       "./graphs/langgraph.json",
-    import.meta.url
-  )
+    import.meta.url,
+  ),
 );
 const config = JSON.parse(await readFile(configPath, "utf-8"));
 
@@ -35,7 +35,7 @@ const server = await spawnServer(
     host: "localhost",
   },
   { config, env, hostUrl: "https://smith.langchain.com" },
-  { pid: process.pid, projectCwd: dirname(configPath) }
+  { pid: process.pid, projectCwd: dirname(configPath) },
 );
 
 process.once("SIGTERM", () => server.kill("SIGTERM"));

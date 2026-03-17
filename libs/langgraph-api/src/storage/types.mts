@@ -234,31 +234,31 @@ export interface RunsRepo {
       ifNotExists?: IfNotExists;
       afterSeconds?: number;
     },
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<Run[]>;
 
   get(
     runId: string,
     thread_id: string | undefined,
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<Run | null>;
 
   delete(
     run_id: string,
     thread_id: string | undefined,
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<string | null>;
 
   wait(
     runId: string,
     threadId: string | undefined,
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<unknown>;
 
   join(
     runId: string,
     threadId: string,
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<unknown>;
   setStatus(runId: string, status: RunStatus): Promise<unknown>;
 
@@ -268,7 +268,7 @@ export interface RunsRepo {
     options: {
       action?: "interrupt" | "rollback";
     },
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<void>;
 
   search(
@@ -279,7 +279,7 @@ export interface RunsRepo {
       status?: string | null;
       metadata?: Metadata | null;
     },
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<Run[]>;
 
   readonly stream: RunsStreamRepo;
@@ -294,7 +294,7 @@ export interface RunsStreamRepo {
       cancelOnDisconnect?: AbortSignal;
       lastEventId: string | undefined;
     },
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): AsyncGenerator<{ id?: string; event: string; data: unknown }>;
 
   publish(payload: {
@@ -318,7 +318,7 @@ export interface ThreadsRepo {
       sort_order?: "asc" | "desc";
       select?: ThreadSelectField[];
     },
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): AsyncGenerator<{ thread: Thread; total: number }>;
 
   get(thread_id: string, auth: AuthContext | undefined): Promise<Thread>;
@@ -329,13 +329,13 @@ export interface ThreadsRepo {
       metadata?: Metadata;
       if_exists: OnConflictBehavior;
     },
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<Thread>;
 
   patch(
     threadId: string,
     options: { metadata?: Metadata },
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<Thread>;
 
   setStatus(
@@ -343,7 +343,7 @@ export interface ThreadsRepo {
     options: {
       checkpoint?: CheckpointPayload;
       exception?: Error;
-    }
+    },
   ): Promise<void>;
 
   delete(thread_id: string, auth: AuthContext | undefined): Promise<string[]>;
@@ -356,7 +356,7 @@ export interface ThreadsRepo {
       values?: Record<string, unknown>;
       status?: ThreadStatus;
     },
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<number>;
 
   readonly state: ThreadsStateRepo;
@@ -366,7 +366,7 @@ export interface ThreadsStateRepo {
   get(
     config: RunnableConfig,
     options: { subgraphs?: boolean },
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<LangGraphStateSnapshot>;
 
   post(
@@ -377,7 +377,7 @@ export interface ThreadsStateRepo {
       | null
       | undefined,
     asNode: string | undefined,
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<{ checkpoint: Record<string, unknown> | undefined }>;
 
   bulk(
@@ -394,7 +394,7 @@ export interface ThreadsStateRepo {
         as_node?: string | undefined;
       }>;
     }>,
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<{ checkpoint: Record<string, unknown> | undefined } | unknown[]>;
 
   list(
@@ -404,7 +404,7 @@ export interface ThreadsStateRepo {
       before?: string | RunnableConfig;
       metadata?: Metadata;
     },
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<LangGraphStateSnapshot[]>;
 }
 
@@ -425,7 +425,7 @@ export interface AssistantsRepo {
       sort_order?: "asc" | "desc";
       select?: AssistantSelectField[];
     },
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): AsyncGenerator<{ assistant: Assistant; total: number }>;
 
   get(assistant_id: string, auth: AuthContext | undefined): Promise<Assistant>;
@@ -441,7 +441,7 @@ export interface AssistantsRepo {
       name?: string;
       description?: string;
     },
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<Assistant>;
 
   patch(
@@ -454,24 +454,24 @@ export interface AssistantsRepo {
       name?: string;
       description?: string;
     },
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<Assistant>;
 
   delete(
     assistant_id: string,
     delete_threads: boolean,
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<string[]>;
 
   count(
     options: { graph_id?: string; name?: string; metadata?: Metadata },
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<number>;
 
   setLatest(
     assistant_id: string,
     version: number,
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<Assistant>;
 
   getVersions(
@@ -481,7 +481,7 @@ export interface AssistantsRepo {
       offset: number;
       metadata?: Metadata;
     },
-    auth: AuthContext | undefined
+    auth: AuthContext | undefined,
   ): Promise<AssistantVersion[]>;
 }
 

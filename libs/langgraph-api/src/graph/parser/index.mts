@@ -29,22 +29,22 @@ const isGraphSpec = (spec: unknown): spec is GraphSpec => {
 
 export async function getStaticGraphSchema(
   spec: GraphSpec,
-  options?: { mainThread?: boolean; timeoutMs?: number }
+  options?: { mainThread?: boolean; timeoutMs?: number },
 ): Promise<GraphSchemaWithSubgraphs>;
 
 export async function getStaticGraphSchema(
   specMap: Record<string, GraphSpec>,
-  options?: { mainThread?: boolean; timeoutMs?: number }
+  options?: { mainThread?: boolean; timeoutMs?: number },
 ): Promise<Record<string, GraphSchemaWithSubgraphs>>;
 
 export async function getStaticGraphSchema(
   input: Record<string, GraphSpec> | GraphSpec,
-  options?: { mainThread?: boolean; timeoutMs?: number }
+  options?: { mainThread?: boolean; timeoutMs?: number },
 ): Promise<
   Record<string, GraphSchemaWithSubgraphs> | GraphSchemaWithSubgraphs
 > {
   async function execute(
-    specs: GraphSpec[]
+    specs: GraphSpec[],
   ): Promise<GraphSchemaWithSubgraphs[]> {
     if (options?.mainThread) {
       const { SubgraphExtractor } = await import("./parser.mjs");
@@ -55,7 +55,7 @@ export async function getStaticGraphSchema(
       (resolve, reject) => {
         const worker = new Worker(
           fileURLToPath(new URL("./parser.worker.mjs", import.meta.url)),
-          { argv: process.argv.slice(-1) }
+          { argv: process.argv.slice(-1) },
         );
 
         // Set a timeout to reject if the worker takes too long
@@ -72,7 +72,7 @@ export async function getStaticGraphSchema(
 
         worker.on("error", reject);
         worker.postMessage(specs);
-      }
+      },
     );
   }
 
@@ -84,7 +84,7 @@ export async function getStaticGraphSchema(
   }
 
   return Object.fromEntries(
-    Object.keys(input).map((graphId, idx) => [graphId, results[idx]])
+    Object.keys(input).map((graphId, idx) => [graphId, results[idx]]),
   );
 }
 
@@ -130,7 +130,7 @@ function isStateSchemaLike(value: unknown): value is StateSchemaLike {
  * @returns GraphSchema if StateSchema instances found, undefined otherwise
  */
 async function tryStateSchemaExtraction(
-  graph: Pregel<any, any, any, any, any>
+  graph: Pregel<any, any, any, any, any>,
 ): Promise<GraphSchema | undefined> {
   const builder = (graph as unknown as { builder?: GraphBuilder }).builder;
   if (!builder) return undefined;
@@ -181,7 +181,7 @@ async function tryStateSchemaExtraction(
  * @returns GraphSchema if Zod schemas found in registry, undefined otherwise
  */
 async function tryZodRegistryExtraction(
-  graph: Pregel<any, any, any, any, any>
+  graph: Pregel<any, any, any, any, any>,
 ): Promise<GraphSchema | undefined> {
   try {
     const {
@@ -214,13 +214,12 @@ async function tryZodRegistryExtraction(
  * @returns GraphSchema if Zod schemas found, undefined otherwise
  */
 async function tryDirectZodExtraction(
-  graph: Pregel<any, any, any, any, any>
+  graph: Pregel<any, any, any, any, any>,
 ): Promise<GraphSchema | undefined> {
   try {
     const { toJsonSchema } = await import("@langchain/core/utils/json_schema");
-    const { isZodSchemaV3, isZodSchemaV4 } = await import(
-      "@langchain/core/utils/types"
-    );
+    const { isZodSchemaV3, isZodSchemaV4 } =
+      await import("@langchain/core/utils/types");
 
     const builder = (graph as unknown as { builder?: GraphBuilder }).builder;
     if (!builder) return undefined;
@@ -264,7 +263,7 @@ async function tryDirectZodExtraction(
  * @returns GraphSchema with state/input/output/config schemas, or undefined if extraction fails
  */
 export async function getRuntimeGraphSchema(
-  graph: Pregel<any, any, any, any, any>
+  graph: Pregel<any, any, any, any, any>,
 ): Promise<GraphSchema | undefined> {
   const builder = (graph as unknown as { builder?: GraphBuilder }).builder;
   if (!builder) return undefined;

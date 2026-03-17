@@ -35,7 +35,7 @@ export const calculate = tool(
         .string()
         .describe("The mathematical expression to evaluate (e.g., '2 + 2')"),
     }),
-  }
+  },
 );
 
 /**
@@ -49,7 +49,7 @@ export const getFact = tool(
     });
 
     const randomFact = await model.invoke(
-      `Give me a random fact about ${topic}`
+      `Give me a random fact about ${topic}`,
     );
 
     return JSON.stringify({
@@ -65,10 +65,10 @@ export const getFact = tool(
       topic: z
         .string()
         .describe(
-          "The topic to get a fact about (science, history, or nature)"
+          "The topic to get a fact about (science, history, or nature)",
         ),
     }),
-  }
+  },
 );
 
 /**

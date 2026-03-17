@@ -52,7 +52,7 @@ beforeAll(async () => {
         stdio: "overlapped",
         env: { ...process.env, PORT: "2024" },
         shell: true,
-      }
+      },
     );
 
     server.stdout?.on("data", (data) => console.log(data.toString().trimEnd()));
@@ -99,7 +99,7 @@ describe("assistants", () => {
 
     await client.assistants.delete(res.assistant_id);
     await expect(() => client.assistants.get(res.assistant_id)).rejects.toThrow(
-      "HTTP 404: Assistant not found"
+      "HTTP 404: Assistant not found",
     );
   });
 
@@ -120,10 +120,10 @@ describe("assistants", () => {
 
     await client.assistants.delete(assistantId, { deleteThreads: true });
     await expect(() => client.assistants.get(assistantId)).rejects.toThrow(
-      "HTTP 404: Assistant not found"
+      "HTTP 404: Assistant not found",
     );
     await expect(() => client.threads.get(threadId)).rejects.toThrow(
-      `HTTP 404: Thread with ID ${threadId} not found`
+      `HTTP 404: Thread with ID ${threadId} not found`,
     );
   });
 
@@ -194,7 +194,7 @@ describe("assistants", () => {
 
     await client.assistants.delete(res.assistant_id);
     await expect(() => client.assistants.get(res.assistant_id)).rejects.toThrow(
-      "HTTP 404: Assistant not found"
+      "HTTP 404: Assistant not found",
     );
   });
 
@@ -209,7 +209,7 @@ describe("assistants", () => {
         expect(assistant).toMatchObject({ graph_id: graphId });
 
         const schemas = await client.assistants.getSchemas(
-          assistant.assistant_id
+          assistant.assistant_id,
         );
 
         // StateSchema with MessagesValue should include jsonSchemaExtra
@@ -226,7 +226,7 @@ describe("assistants", () => {
         });
 
         await client.assistants.delete(assistant.assistant_id);
-      }
+      },
     );
 
     it(
@@ -239,7 +239,7 @@ describe("assistants", () => {
         expect(assistant).toMatchObject({ graph_id: graphId });
 
         const schemas = await client.assistants.getSchemas(
-          assistant.assistant_id
+          assistant.assistant_id,
         );
         expect(schemas.state_schema).toBeDefined();
 
@@ -257,7 +257,7 @@ describe("assistants", () => {
         });
 
         await client.assistants.delete(assistant.assistant_id);
-      }
+      },
     );
 
     it(
@@ -270,7 +270,7 @@ describe("assistants", () => {
         expect(assistant).toMatchObject({ graph_id: graphId });
 
         const schemas = await client.assistants.getSchemas(
-          assistant.assistant_id
+          assistant.assistant_id,
         );
         expect(schemas.state_schema).toBeDefined();
 
@@ -285,11 +285,11 @@ describe("assistants", () => {
 
         // Verify plain Zod does NOT have langgraph_type (no withLangGraph used)
         expect(schemas.state_schema?.properties?.items).not.toHaveProperty(
-          "langgraph_type"
+          "langgraph_type",
         );
 
         await client.assistants.delete(assistant.assistant_id);
-      }
+      },
     );
   });
 
@@ -314,14 +314,14 @@ describe("assistants", () => {
     });
     expect(search.length).toBeGreaterThanOrEqual(1);
     expect(search.every((i) => i.assistant_id !== create.assistant_id)).toBe(
-      true
+      true,
     );
 
     // search by name
     search = await client.assistants.search({ name: "SIMPLE_runtime" });
     expect(search.length).toEqual(1);
     expect(
-      search[0].name.toLowerCase().includes("SIMPLE_runtime".toLowerCase())
+      search[0].name.toLowerCase().includes("SIMPLE_runtime".toLowerCase()),
     );
 
     search = await client.assistants.search({ name: "SIMPLE_" });
@@ -347,7 +347,7 @@ describe("assistants", () => {
 
     // (1) initial version
     expect(
-      await client.assistants.getVersions(assistant.assistant_id)
+      await client.assistants.getVersions(assistant.assistant_id),
     ).toMatchObject([{ version: 1 }]);
 
     // (2) update and create a new version
@@ -355,7 +355,7 @@ describe("assistants", () => {
       config: { configurable: { foo: "bar" } },
     });
     expect(
-      await client.assistants.getVersions(assistant.assistant_id)
+      await client.assistants.getVersions(assistant.assistant_id),
     ).toMatchObject([
       { version: 2, config: { configurable: { foo: "bar" } } },
       { version: 1 },
@@ -365,14 +365,14 @@ describe("assistants", () => {
     expect(
       await client.assistants.getVersions(assistant.assistant_id, {
         limit: 1,
-      })
+      }),
     ).toMatchObject([{ version: 2 }]);
 
     // descending order
     expect(
       await client.assistants.getVersions(assistant.assistant_id, {
         offset: 1,
-      })
+      }),
     ).toMatchObject([{ version: 1 }]);
 
     // (3) create a version with metadata
@@ -383,14 +383,14 @@ describe("assistants", () => {
     expect(
       await client.assistants.getVersions(assistant.assistant_id, {
         metadata: { foo: "baz" },
-      })
+      }),
     ).toMatchObject([{ version: 3 }]);
 
     // (4) noop update
     await client.assistants.update(assistant.assistant_id, {});
 
     expect(
-      await client.assistants.getVersions(assistant.assistant_id)
+      await client.assistants.getVersions(assistant.assistant_id),
     ).toMatchObject([
       { version: 4 },
       { version: 3 },
@@ -400,7 +400,7 @@ describe("assistants", () => {
 
     await client.assistants.delete(assistant.assistant_id);
     await expect(
-      client.assistants.getVersions(assistant.assistant_id)
+      client.assistants.getVersions(assistant.assistant_id),
     ).rejects.toThrow("HTTP 404");
   });
 
@@ -414,12 +414,12 @@ describe("assistants", () => {
 
     const updatedAgain = await client.assistants.update(
       created.assistant_id,
-      {}
+      {},
     );
 
     expect(updatedAgain.version).toBe(3);
     await expect(
-      client.assistants.setLatest(created.assistant_id, 4)
+      client.assistants.setLatest(created.assistant_id, 4),
     ).rejects.toThrow();
   });
 
@@ -563,7 +563,7 @@ describe("threads crud", () => {
           ],
         },
         asNode: "agent",
-      })
+      }),
     ).rejects.toThrow("HTTP 409");
 
     // Cancel the run
@@ -610,7 +610,7 @@ describe("threads copy", () => {
 
     const copiedThread = await client.threads.copy(thread.thread_id);
     const copiedThreadState = await client.threads.getState(
-      copiedThread.thread_id
+      copiedThread.thread_id,
     );
 
     // check copied thread state matches expected output
@@ -636,7 +636,7 @@ describe("threads copy", () => {
       // For in-memory connections, check the thread history
       const originalHistory = await client.threads.getHistory(thread.thread_id);
       const copiedHistory = await client.threads.getHistory(
-        copiedThread.thread_id
+        copiedThread.thread_id,
       );
 
       expect(originalHistory.length).toBe(copiedHistory.length);
@@ -665,7 +665,7 @@ describe("threads copy", () => {
     } else {
       const sql = postgres(
         process.env.POSTGRES_URI ??
-          "postgres://postgres:postgres@127.0.0.1:5433/postgres?sslmode=disable"
+          "postgres://postgres:postgres@127.0.0.1:5433/postgres?sslmode=disable",
       );
 
       // check checkpoints in DB
@@ -726,11 +726,11 @@ describe("threads copy", () => {
 
     // test that copied thread has original as well as new values
     const copiedThreadState = await client.threads.getState<AgentState>(
-      copiedThread.thread_id
+      copiedThread.thread_id,
     );
 
     const copiedThreadStateMessages = copiedThreadState.values.messages.map(
-      (m) => m.content
+      (m) => m.content,
     );
     expect(copiedThreadStateMessages).toEqual([
       // original messages
@@ -747,7 +747,7 @@ describe("threads copy", () => {
 
     // test that the new run on the copied thread doesn't affect the original one
     const currentOriginalThreadState = await client.threads.getState(
-      thread.thread_id
+      thread.thread_id,
     );
     expect(currentOriginalThreadState).toEqual(originalThreadState);
   });
@@ -766,7 +766,7 @@ describe("threads copy", () => {
     });
 
     const history = await client.threads.getHistory<AgentState>(
-      thread.thread_id
+      thread.thread_id,
     );
 
     if (history.length !== 5) {
@@ -786,11 +786,11 @@ describe("threads copy", () => {
     });
 
     const fullHistory = await client.threads.getHistory<AgentState>(
-      thread.thread_id
+      thread.thread_id,
     );
     const filteredHistory = await client.threads.getHistory<AgentState>(
       thread.thread_id,
-      { metadata: runMetadata }
+      { metadata: runMetadata },
     );
 
     expect(fullHistory.length).toBe(10);
@@ -821,13 +821,13 @@ describe("threads copy", () => {
     });
 
     const copiedThreadState = await client.threads.getState<AgentState>(
-      copyThread.thread_id
+      copyThread.thread_id,
     );
     expect(copiedThreadState.values.messages[0].content).toBe("bar");
 
     // test that updating the copied thread doesn't affect the original one
     const currentOriginalThreadState = await client.threads.getState(
-      thread.thread_id
+      thread.thread_id,
     );
     expect(currentOriginalThreadState).toEqual(originalState);
   });
@@ -851,7 +851,7 @@ describe("runs", () => {
         input: { messages: [{ type: "human", content: "bar" }] },
         config: globalConfig,
         afterSeconds: 10,
-      }
+      },
     );
 
     let runs = await client.runs.list(thread.thread_id);
@@ -875,7 +875,7 @@ describe("runs", () => {
     const stream = client.runs.stream(
       thread.thread_id,
       assistant.assistant_id,
-      { input, streamMode: "values", config: globalConfig }
+      { input, streamMode: "values", config: globalConfig },
     );
 
     let runId: string | null = null;
@@ -892,7 +892,7 @@ describe("runs", () => {
 
       if (chunk.event === "values") {
         const messageIds = chunk.data.messages.map(
-          (message: { id: string }) => message.id
+          (message: { id: string }) => message.id,
         );
         expect(messageIds.slice(0, -1)).toEqual(previousMessageIds);
         previousMessageIds = messageIds;
@@ -912,7 +912,7 @@ describe("runs", () => {
     } else {
       const sql = postgres(
         process.env.POSTGRES_URI ??
-          "postgres://postgres:postgres@127.0.0.1:5433/postgres?sslmode=disable"
+          "postgres://postgres:postgres@127.0.0.1:5433/postgres?sslmode=disable",
       );
 
       let cur = await sql`SELECT * FROM checkpoints WHERE run_id is null`;
@@ -935,7 +935,7 @@ describe("runs", () => {
       client.runs.wait(thread.thread_id, assistant.assistant_id, {
         input,
         config: { ...globalConfig, recursion_limit: 1 },
-      })
+      }),
     ).rejects.toThrowError(/GraphRecursionError/);
     const threadUpdated = await client.threads.get(thread.thread_id);
     expect(threadUpdated.status).toBe("error");
@@ -950,7 +950,7 @@ describe("runs", () => {
     const values = await client.runs.wait(
       thread.thread_id,
       assistant.assistant_id,
-      { input, config: globalConfig }
+      { input, config: globalConfig },
     );
 
     expect(Array.isArray((values as any).messages)).toBe(true);
@@ -967,7 +967,7 @@ describe("runs", () => {
     const stream = client.runs.stream(
       thread.thread_id,
       assistant.assistant_id,
-      { input, streamMode: "updates", config: globalConfig }
+      { input, streamMode: "updates", config: globalConfig },
     );
 
     let runId: string | null = null;
@@ -1007,20 +1007,20 @@ describe("runs", () => {
     const stream = client.runs.stream(
       thread.thread_id,
       assistant.assistant_id,
-      { input, streamMode: "events", config: globalConfig }
+      { input, streamMode: "events", config: globalConfig },
     );
 
     const events = await gatherIterator(stream);
     expect(new Set(events.map((i) => i.event))).toEqual(
-      new Set(["metadata", "events"])
+      new Set(["metadata", "events"]),
     );
 
     expect(
       new Set(
         events
           .filter((i) => i.event === "events")
-          .map((i) => (i.data as any).event)
-      )
+          .map((i) => (i.data as any).event),
+      ),
     ).toEqual(
       new Set([
         "on_chain_start",
@@ -1028,7 +1028,7 @@ describe("runs", () => {
         "on_chat_model_end",
         "on_chat_model_start",
         "on_chat_model_stream",
-      ])
+      ]),
     );
   });
 
@@ -1041,7 +1041,7 @@ describe("runs", () => {
     const stream = client.runs.stream(
       thread.thread_id,
       assistant.assistant_id,
-      { input, streamMode: "messages", config: globalConfig }
+      { input, streamMode: "messages", config: globalConfig },
     );
 
     let runId: string | null = null;
@@ -1082,7 +1082,7 @@ describe("runs", () => {
         "messages/metadata",
         "messages/partial",
         "messages/complete",
-      ])
+      ]),
     );
 
     expect(runId).not.toBeNull();
@@ -1104,7 +1104,7 @@ describe("runs", () => {
         streamMode: "messages-tuple",
         config: globalConfig,
         streamSubgraphs: true,
-      }
+      },
     );
 
     const chunks = await gatherIterator(stream);
@@ -1115,7 +1115,7 @@ describe("runs", () => {
     const messages = chunks
       .filter(
         (i): i is MessagesTupleStreamEvent =>
-          i.event.startsWith("messages|") || i.event === "messages"
+          i.event.startsWith("messages|") || i.event === "messages",
       )
       .map((i) => i.data[0]);
 
@@ -1142,7 +1142,7 @@ describe("runs", () => {
     const stream = await client.runs.stream(
       thread.thread_id,
       assistant.assistant_id,
-      { input, streamMode: ["messages", "values"], config: globalConfig }
+      { input, streamMode: ["messages", "values"], config: globalConfig },
     );
 
     const chunks = await gatherIterator(stream);
@@ -1151,7 +1151,7 @@ describe("runs", () => {
 
     const messages: BaseMessage[] = findLast(
       chunks,
-      (i) => i.event === "values"
+      (i) => i.event === "values",
     )?.data.messages;
 
     expect(messages.length).toBe(4);
@@ -1168,7 +1168,7 @@ describe("runs", () => {
         "messages/partial",
         "messages/complete",
         "values",
-      ])
+      ]),
     );
 
     const run = await client.runs.get(thread.thread_id, runId!);
@@ -1193,7 +1193,7 @@ describe("runs", () => {
           input,
           interruptBefore: ["tool"],
           config: globalConfig,
-        })
+        }),
       );
 
       expect(chunks.filter((i) => i.event === "error").length).toBe(0);
@@ -1201,7 +1201,7 @@ describe("runs", () => {
         findLast(
           chunks,
           (i): i is { event: "values"; data: { messages: BaseMessage[] } } =>
-            i.event === "values" && "messages" in i.data
+            i.event === "values" && "messages" in i.data,
         )?.data.messages ?? [];
 
       const threadAfterInterrupt = await client.threads.get(thread.thread_id);
@@ -1218,7 +1218,7 @@ describe("runs", () => {
         client.runs.stream(thread.thread_id, assistant.assistant_id, {
           input: null,
           config: globalConfig,
-        })
+        }),
       );
 
       expect(chunks.filter((i) => i.event === "error").length).toBe(0);
@@ -1230,7 +1230,7 @@ describe("runs", () => {
 
       const threadAfterContinue = await client.threads.get(thread.thread_id);
       expect(threadAfterContinue.status).toBe("idle");
-    }
+    },
   );
 
   it.concurrent("human in the loop - modification", async () => {
@@ -1248,7 +1248,7 @@ describe("runs", () => {
         input,
         interruptBefore: ["tool"],
         config: globalConfig,
-      })
+      }),
     );
 
     expect(chunks.filter((i) => i.event === "error").length).toBe(0);
@@ -1258,7 +1258,7 @@ describe("runs", () => {
       findLast(
         chunks,
         (i): i is { event: "values"; data: { messages: BaseMessage[] } } =>
-          i.event === "values" && "messages" in i.data
+          i.event === "values" && "messages" in i.data,
       )?.data.messages.at(-1) ?? null;
 
     if (!lastMessage) throw new Error("No last message");
@@ -1277,7 +1277,7 @@ describe("runs", () => {
     expect(modifiedThread.metadata?.modified).toBe(true);
 
     const stateAfterModify = await client.threads.getState<AgentState>(
-      thread.thread_id
+      thread.thread_id,
     );
     expect(stateAfterModify.values.messages.at(-1)?.content).toBe("modified");
     expect(stateAfterModify.next).toEqual(["tool"]);
@@ -1290,7 +1290,7 @@ describe("runs", () => {
       client.runs.stream(thread.thread_id, assistant.assistant_id, {
         input: null,
         config: globalConfig,
-      })
+      }),
     );
 
     const threadAfterContinue = await client.threads.get(thread.thread_id);
@@ -1305,7 +1305,7 @@ describe("runs", () => {
 
     // get the history
     const history = await client.threads.getHistory<AgentState>(
-      thread.thread_id
+      thread.thread_id,
     );
     expect(history.length).toBe(6);
     expect(history[0].next.length).toBe(0);
@@ -1337,13 +1337,13 @@ describe("runs", () => {
     };
 
     await expect(
-      client.runs.wait(thread.thread_id, "non-existent", { input })
+      client.runs.wait(thread.thread_id, "non-existent", { input }),
     ).rejects.toThrow(/No assistant found for/);
 
     await expect(
       gatherIterator(
-        client.runs.stream(thread.thread_id, "non-existent", { input })
-      )
+        client.runs.stream(thread.thread_id, "non-existent", { input }),
+      ),
     ).rejects.toThrow(/No assistant found for/);
   });
 });
@@ -1368,12 +1368,12 @@ describe("shared state", () => {
     const res1 = (await client.runs.wait(
       thread.thread_id,
       assistant.assistant_id,
-      { input, config }
+      { input, config },
     )) as Awaited<Record<string, any>>;
     expect(res1.sharedStateFromStoreConfig).toBeDefined();
     expect(res1.sharedStateFromStoreConfig.id).toBeDefined();
     expect(res1.sharedStateFromStoreConfig.id).toBe(
-      config.configurable.user_id
+      config.configurable.user_id,
     );
   });
 
@@ -1398,12 +1398,12 @@ describe("shared state", () => {
     const res1 = (await client.runs.wait(
       thread.thread_id,
       assistant.assistant_id,
-      { input, config }
+      { input, config },
     )) as Awaited<Record<string, any>>;
     expect(res1.sharedStateFromStoreConfig).toBeDefined();
     expect(res1.sharedStateFromStoreConfig.id).toBeDefined();
     expect(res1.sharedStateFromStoreConfig.id).toBe(
-      config.configurable.user_id
+      config.configurable.user_id,
     );
 
     // Fetch data from store client
@@ -1509,7 +1509,7 @@ describe("StoreClient", () => {
     expect(searchResAfterUpdate.items[0].value).toEqual(updatedValue);
 
     expect(
-      new Date(searchResAfterUpdate.items[0].updatedAt).getTime()
+      new Date(searchResAfterUpdate.items[0].updatedAt).getTime(),
     ).toBeGreaterThan(new Date(searchResAfterPut.items[0].updatedAt).getTime());
 
     const listResAfterPut = await client.store.listNamespaces();
@@ -1533,12 +1533,12 @@ describe("subgraphs", () => {
     const assistant = await client.assistants.create({ graphId: "nested" });
 
     expect(
-      Object.keys(await client.assistants.getSubgraphs(assistant.assistant_id))
+      Object.keys(await client.assistants.getSubgraphs(assistant.assistant_id)),
     ).toEqual(["gp_two"]);
 
     const subgraphs = await client.assistants.getSubgraphs(
       assistant.assistant_id,
-      { recurse: true }
+      { recurse: true },
     );
 
     expect(Object.keys(subgraphs)).toEqual(["gp_two", "gp_two|p_two"]);
@@ -1583,7 +1583,7 @@ describe("subgraphs", () => {
           messages: [{ role: "human", content: "SF", id: "initial-message" }],
         },
         interruptBefore: ["tool"],
-      })
+      }),
     );
 
     for (const chunk of chunks) {
@@ -1665,7 +1665,7 @@ describe("subgraphs", () => {
     const stateRecursive = await client.threads.getState(
       thread.thread_id,
       undefined,
-      { subgraphs: true }
+      { subgraphs: true },
     );
 
     expect(stateRecursive.next).toEqual(["weather_graph"]);
@@ -1724,14 +1724,14 @@ describe("subgraphs", () => {
         input: null,
         streamMode: ["values", "updates"],
         streamSubgraphs: true,
-      })
+      }),
     );
 
     expect(chunksSubgraph.filter((i) => i.event === "error")).toEqual([]);
     expect(chunksSubgraph.at(-1)?.event).toBe("values");
 
     const continueMessages = chunksSubgraph.findLast(
-      (i) => i.event === "values"
+      (i) => i.event === "values",
     )?.data.messages;
 
     expect(continueMessages.length).toBe(2);
@@ -1886,7 +1886,7 @@ describe("subgraphs", () => {
 
     // run until the interrupt (same as before)
     let chunks = await gatherIterator(
-      client.runs.stream(thread.thread_id, assistant.assistant_id, { input })
+      client.runs.stream(thread.thread_id, assistant.assistant_id, { input }),
     );
     expect(chunks.filter((i) => i.event === "error")).toEqual([]);
 
@@ -1918,7 +1918,7 @@ describe("subgraphs", () => {
     // get inner state after update
     const innerState = await client.threads.getState<{ city: string }>(
       thread.thread_id,
-      state.tasks[0].checkpoint ?? undefined
+      state.tasks[0].checkpoint ?? undefined,
     );
 
     expect(innerState.values.city).toBe("LA");
@@ -1940,7 +1940,7 @@ describe("subgraphs", () => {
     chunks = await gatherIterator(
       client.runs.stream(thread.thread_id, assistant.assistant_id, {
         input: null,
-      })
+      }),
     );
 
     expect(chunks.filter((i) => i.event === "error")).toEqual([]);
@@ -2021,7 +2021,7 @@ describe("subgraphs", () => {
     const stream = await gatherIterator(
       client.runs.stream(thread.thread_id, assistant.assistant_id, {
         command: { resume: "i want to resume" },
-      })
+      }),
     );
 
     expect(stream.at(-1)?.event).toBe("values");
@@ -2038,7 +2038,7 @@ describe("errors", () => {
       client.runs.stream(thread.thread_id, assistant.assistant_id, {
         input: { messages: [] },
         streamMode: ["debug", "events"],
-      })
+      }),
     );
 
     expect(stream.at(-1)).toMatchObject({
@@ -2057,7 +2057,7 @@ describe("errors", () => {
     const run = await client.runs.create(
       thread.thread_id,
       assistant.assistant_id,
-      { input: { messages: [] } }
+      { input: { messages: [] } },
     );
 
     await client.runs.join(thread.thread_id, run.run_id);
@@ -2072,11 +2072,11 @@ describe("errors", () => {
     const run = await client.runs.create(
       thread.thread_id,
       assistant.assistant_id,
-      { input: { messages: [] } }
+      { input: { messages: [] } },
     );
 
     const stream = await gatherIterator(
-      client.runs.joinStream(thread.thread_id, run.run_id)
+      client.runs.joinStream(thread.thread_id, run.run_id),
     );
 
     expect(stream.at(-1)).toMatchObject({
@@ -2106,7 +2106,7 @@ describe("long running tasks", () => {
         {
           input: { messages: [], delay },
           config: globalConfig,
-        }
+        },
       );
 
       await client.runs.join(thread.thread_id, run.run_id);
@@ -2122,7 +2122,7 @@ describe("long running tasks", () => {
       expect(runResult.values.messages).toMatchObject([
         { content: `finished after ${delay}ms` },
       ]);
-    }
+    },
   );
 });
 
@@ -2148,7 +2148,7 @@ describe("command update state", () => {
       client.runs.stream(thread.thread_id, assistant.assistant_id, {
         command: { update: { keyOne: "value3", keyTwo: "value4" } },
         config: globalConfig,
-      })
+      }),
     );
     expect(stream.filter((chunk) => chunk.event === "error")).toEqual([]);
 
@@ -2183,7 +2183,7 @@ describe("command update state", () => {
           ],
         },
         config: globalConfig,
-      })
+      }),
     );
     expect(stream.filter((chunk) => chunk.event === "error")).toEqual([]);
 
@@ -2206,7 +2206,7 @@ it("stream debug checkpoint", async () => {
     {
       input,
       streamMode: "debug",
-    }
+    },
   );
 
   const stream = [];
@@ -2225,13 +2225,13 @@ it("stream debug checkpoint", async () => {
       step: i.metadata?.step,
       checkpoint: i.checkpoint,
       parent_checkpoint: i.parent_checkpoint,
-    }))
+    })),
   ).toEqual(
     history.map((i) => ({
       step: i.metadata?.step,
       checkpoint: i.checkpoint,
       parent_checkpoint: i.parent_checkpoint,
-    }))
+    })),
   );
 });
 
@@ -2248,12 +2248,12 @@ it("continue after interrupt must have checkpoint present", async () => {
       input,
       streamMode: "debug",
       interruptBefore: ["router_node"],
-    })
+    }),
   );
 
   const initialStream = stream
     .filter(
-      (i) => i.event === "debug" && (i.data as any)?.type === "checkpoint"
+      (i) => i.event === "debug" && (i.data as any)?.type === "checkpoint",
     )
     .map((i) => (i.data as any)?.payload);
 
@@ -2265,7 +2265,7 @@ it("continue after interrupt must have checkpoint present", async () => {
     client.runs.stream(thread.thread_id, assistant.assistant_id, {
       streamMode: "debug",
       checkpoint,
-    })
+    }),
   );
 
   const continueHistory = (
@@ -2281,13 +2281,13 @@ it("continue after interrupt must have checkpoint present", async () => {
       step: i.metadata?.step,
       checkpoint: i.checkpoint,
       parent_checkpoint: i.parent_checkpoint,
-    }))
+    })),
   ).toEqual(
     continueHistory.map((i) => ({
       step: i.metadata?.step,
       checkpoint: i.checkpoint,
       parent_checkpoint: i.parent_checkpoint,
-    }))
+    })),
   );
 });
 
@@ -2296,7 +2296,7 @@ describe("multitasking", () => {
   const pollRun = async (
     threadId: string,
     runId: string,
-    maxIter: number = 600
+    maxIter: number = 600,
   ) => {
     let lastStatus:
       | Awaited<ReturnType<typeof client.runs.get>>["status"]
@@ -2335,7 +2335,7 @@ describe("multitasking", () => {
     const run = await client.runs.create(
       thread.thread_id,
       assistant.assistant_id,
-      { input, config: globalConfig }
+      { input, config: globalConfig },
     );
 
     // Attempt another run that should be rejected
@@ -2344,7 +2344,7 @@ describe("multitasking", () => {
         input,
         multitaskStrategy: "reject",
         config: globalConfig,
-      })
+      }),
     ).rejects.toThrow();
 
     const runStatus = await pollRun(thread.thread_id, run.run_id);
@@ -2363,7 +2363,7 @@ describe("multitasking", () => {
     const run1 = await client.runs.create(
       thread.thread_id,
       assistant.assistant_id,
-      { input: input1, config: globalConfig }
+      { input: input1, config: globalConfig },
     );
 
     // Start second run that should interrupt first
@@ -2378,7 +2378,7 @@ describe("multitasking", () => {
         input: input2,
         multitaskStrategy: "interrupt",
         config: globalConfig,
-      }
+      },
     );
 
     const run1Status = await pollRun(thread.thread_id, run1.run_id);
@@ -2411,7 +2411,7 @@ describe("multitasking", () => {
     const run1 = await client.runs.create(
       thread.thread_id,
       assistant.assistant_id,
-      { input: input1, config: globalConfig }
+      { input: input1, config: globalConfig },
     );
 
     // Start second run that should rollback first
@@ -2421,12 +2421,12 @@ describe("multitasking", () => {
     const run2 = await client.runs.create(
       thread.thread_id,
       assistant.assistant_id,
-      { input: input2, multitaskStrategy: "rollback", config: globalConfig }
+      { input: input2, multitaskStrategy: "rollback", config: globalConfig },
     );
 
     // First run should be deleted
     await expect(() =>
-      pollRun(thread.thread_id, run1.run_id)
+      pollRun(thread.thread_id, run1.run_id),
     ).rejects.toThrow();
 
     const run2Status = await pollRun(thread.thread_id, run2.run_id);
@@ -2449,7 +2449,7 @@ describe("multitasking", () => {
     const run1 = await client.runs.create(
       thread.thread_id,
       assistant.assistant_id,
-      { input: input1, config: globalConfig }
+      { input: input1, config: globalConfig },
     );
 
     // Start second run that should be enqueued
@@ -2464,7 +2464,7 @@ describe("multitasking", () => {
         input: input2,
         multitaskStrategy: "enqueue",
         config: globalConfig,
-      }
+      },
     );
 
     const run1Status = await pollRun(thread.thread_id, run1.run_id);
@@ -2490,7 +2490,7 @@ describe("RemoteGraph", () => {
     });
     const stream = await graph.stream(
       { messages: [{ type: "human", content: "foo", id: "initial-message" }] },
-      { streamMode: "values", ...globalConfig }
+      { streamMode: "values", ...globalConfig },
     );
 
     const chunks = await gatherIterator(stream);
@@ -2526,7 +2526,7 @@ it("batch update state", async () => {
       input,
       config: globalConfig,
       streamMode: ["updates"],
-    })
+    }),
   );
 
   const history = await client.threads.getHistory(thread.thread_id);
@@ -2567,14 +2567,14 @@ it("dynamic graph", async () => {
     client.runs.stream(null, defaultAssistant.assistant_id, {
       input: { messages: ["input"] },
       streamMode: ["updates"],
-    })
+    }),
   );
 
   expect
     .soft(
       updates
         .filter((i) => i.event === "updates")
-        .flatMap((i) => Object.keys(i.data))
+        .flatMap((i) => Object.keys(i.data)),
     )
     .toEqual(expect.arrayContaining(["default"]));
 
@@ -2583,14 +2583,14 @@ it("dynamic graph", async () => {
       input: { messages: ["input"] },
       config: { configurable: { nodeName: "runtime" } },
       streamMode: ["updates"],
-    })
+    }),
   );
 
   expect
     .soft(
       updates
         .filter((i) => i.event === "updates")
-        .flatMap((i) => Object.keys(i.data))
+        .flatMap((i) => Object.keys(i.data)),
     )
     .toEqual(expect.arrayContaining(["runtime"]));
 
@@ -2604,14 +2604,14 @@ it("dynamic graph", async () => {
     client.runs.stream(thread.thread_id, configAssistant.assistant_id, {
       input: { messages: ["input"], configurable: { nodeName: "assistant" } },
       streamMode: ["updates"],
-    })
+    }),
   );
 
   expect
     .soft(
       updates
         .filter((i) => i.event === "updates")
-        .flatMap((i) => Object.keys(i.data))
+        .flatMap((i) => Object.keys(i.data)),
     )
     .toEqual(expect.arrayContaining(["assistant"]));
 
@@ -2631,10 +2631,10 @@ it("dynamic graph", async () => {
 it("generative ui", async () => {
   const ui = await client["~ui"].getComponent(
     "agent-alias",
-    "weather-component"
+    "weather-component",
   );
   expect(ui).toContain(
-    `<script src="http://localhost:2024/ui/agent-alias/entrypoint.js" onload='__LGUI_agent_alias.render("weather-component", "{{shadowRootId}}")'></script>`
+    `<script src="http://localhost:2024/ui/agent-alias/entrypoint.js" onload='__LGUI_agent_alias.render("weather-component", "{{shadowRootId}}")'></script>`,
   );
 
   const match = /src="(?<src>[^"]+)"/.exec(ui);
@@ -2646,7 +2646,7 @@ it("generative ui", async () => {
   expect(js).contains(`globalThis[Symbol.for("LGUI_REQUIRE")]`);
 
   await expect(() =>
-    client["~ui"].getComponent("non-existent", "none")
+    client["~ui"].getComponent("non-existent", "none"),
   ).rejects.toThrow();
 });
 
@@ -2668,16 +2668,16 @@ it("custom routes", async () => {
   expect(res.json).toEqual({ foo: "afakeroute" });
 
   await expect(() =>
-    fetcher(new URL("/does/not/exist", API_URL))
+    fetcher(new URL("/does/not/exist", API_URL)),
   ).rejects.toThrow("404");
 
   await expect(() =>
-    fetcher(new URL("/custom/error", API_URL))
+    fetcher(new URL("/custom/error", API_URL)),
   ).rejects.toThrow("400");
 
   if (!IS_MEMORY) {
     await expect(() =>
-      fetcher(new URL("/__langgraph_check", API_URL), { method: "OPTIONS" })
+      fetcher(new URL("/__langgraph_check", API_URL), { method: "OPTIONS" }),
     ).rejects.toThrow("404");
   }
 
@@ -2783,7 +2783,7 @@ it("resumable streams", { timeout: 10_000 }, async () => {
       ]);
 
       return gatherIterator(
-        client.runs.joinStream(thread_id, run_id, { lastEventId: "-1" })
+        client.runs.joinStream(thread_id, run_id, { lastEventId: "-1" }),
       );
     })(),
 
@@ -2802,7 +2802,7 @@ it("tasks / checkpoints stream mode", async () => {
       input: { messages: [{ role: "human", content: "input" }] },
       streamMode: ["tasks", "checkpoints"],
       config: globalConfig,
-    })
+    }),
   );
 
   expect(stream).toMatchObject([
@@ -2971,7 +2971,7 @@ describe("runtime API", () => {
         input: { messages: [{ role: "human", content: "input" }] },
         context: { model: "openai" },
         onRunCreated,
-      })
+      }),
     ).toEqual({ model: "openai" });
 
     expect(onRunCreated).toHaveBeenCalledTimes(1);
@@ -3013,7 +3013,7 @@ describe("runtime API", () => {
       await client.runs.wait(null, assistant.assistant_id, {
         input: { messages: [{ role: "human", content: "input" }] },
         onRunCreated,
-      })
+      }),
     ).toEqual({ model: "anthropic" });
     expect(onRunCreated).toHaveBeenCalledTimes(1);
 
@@ -3026,7 +3026,7 @@ describe("runtime API", () => {
       await client.runs.wait(null, assistant.assistant_id, {
         input: { messages: [{ role: "human", content: "input" }] },
         onRunCreated,
-      })
+      }),
     ).toEqual({ model: "openai" });
     expect(onRunCreated).toHaveBeenCalledTimes(2);
   });
@@ -3037,7 +3037,7 @@ describe("runtime API", () => {
       await client.runs.wait(null, "simple_runtime", {
         input: { messages: [{ role: "human", content: "input" }] },
         onRunCreated,
-      })
+      }),
     ).toEqual({ model: "unknown" });
     expect(onRunCreated).toHaveBeenCalledTimes(1);
   });

@@ -37,7 +37,7 @@ function hasContent(message: Message): boolean {
   }
   if (Array.isArray(message.content)) {
     return message.content.some(
-      (c) => c.type === "text" && c.text.trim().length > 0
+      (c) => c.type === "text" && c.text.trim().length > 0,
     );
   }
   return false;
@@ -61,7 +61,7 @@ export function HumanInTheLoop() {
     (content: string) => {
       stream.submit({ messages: [{ content, type: "human" }] });
     },
-    [stream]
+    [stream],
   );
 
   /**
@@ -131,7 +131,7 @@ export function HumanInTheLoop() {
    */
   const handleEdit = async (
     index: number,
-    editedArgs: Record<string, unknown>
+    editedArgs: Record<string, unknown>,
   ) => {
     if (!hitlRequest) return;
     setIsProcessing(true);

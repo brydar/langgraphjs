@@ -19,7 +19,7 @@ export function SubagentPipeline({
   }
 
   const completedCount = subagents.filter(
-    (s) => s.status === "complete"
+    (s) => s.status === "complete",
   ).length;
   const totalCount = subagents.length;
 

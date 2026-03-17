@@ -31,7 +31,7 @@ function getStreamingContent(messages: Message[]): string {
       if (Array.isArray(m.content)) {
         return m.content
           .filter((c): c is { type: "text"; text: string } =>
-            Boolean(c.type === "text" && c.text)
+            Boolean(c.type === "text" && c.text),
           )
           .map((c) => c.text)
           .join("");
@@ -154,7 +154,7 @@ export function SubagentCard({
   // Get streaming content from messages (same pattern as main stream)
   const streamingContent = useMemo(
     () => getStreamingContent(subagent.messages),
-    [subagent.messages]
+    [subagent.messages],
   );
 
   // Auto-scroll as content streams in

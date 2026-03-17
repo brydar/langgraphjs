@@ -19,7 +19,7 @@ function handleSubmit() {
         ...prev,
         messages: [...((prev.messages ?? []) as Message[]), newMessage],
       }),
-    }
+    },
   );
   input.value = "";
 }

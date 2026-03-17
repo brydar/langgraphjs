@@ -11,7 +11,7 @@ const config = { configurable: { user_id: "123" } };
 let server: ChildProcess | undefined;
 
 const SECRET_KEY = new TextEncoder().encode(
-  "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
+  "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7",
 );
 const ALGORITHM = "HS256";
 
@@ -36,7 +36,7 @@ beforeAll(async () => {
         stdio: "overlapped",
         env: { ...process.env, PORT: "2025" },
         shell: true,
-      }
+      },
     );
 
     server.stdout?.on("data", (data) => console.log(data.toString().trimEnd()));
@@ -55,9 +55,9 @@ it.skipIf(process.version.startsWith("v18."))(
   async () => {
     const client = await createJwtClient("wfh", ["me"]);
     await expect(
-      client.assistants.create({ graphId: "agent" })
+      client.assistants.create({ graphId: "agent" }),
     ).rejects.toThrow("HTTP 401");
-  }
+  },
 );
 
 it.skipIf(process.version.startsWith("v18."))(
@@ -65,12 +65,12 @@ it.skipIf(process.version.startsWith("v18."))(
   async () => {
     let user = await createJwtClient("johndoe");
     await expect(user.assistants.create({ graphId: "agent" })).rejects.toThrow(
-      "HTTP 403"
+      "HTTP 403",
     );
 
     user = await createJwtClient("johndoe", ["foo"]);
     await expect(user.assistants.create({ graphId: "agent" })).rejects.toThrow(
-      "HTTP 403"
+      "HTTP 403",
     );
 
     user = await createJwtClient("johndoe", ["assistants:write"]);
@@ -79,7 +79,7 @@ it.skipIf(process.version.startsWith("v18."))(
     const fetched = await user.assistants.search({ graphId: "agent" });
     expect(fetched).toHaveLength(1);
     expect(fetched).toMatchObject([{ metadata: { owner: "johndoe" } }]);
-  }
+  },
 );
 
 it.skipIf(process.version.startsWith("v18."))(
@@ -99,9 +99,9 @@ it.skipIf(process.version.startsWith("v18."))(
 
     const user2 = await createJwtClient("alice", ["me"]);
     await expect(
-      user2.runs.wait(thread.thread_id, "agent", { input, config })
+      user2.runs.wait(thread.thread_id, "agent", { input, config }),
     ).rejects.toThrow("HTTP 404");
-  }
+  },
 );
 
 it.skipIf(process.version.startsWith("v18."))(
@@ -116,9 +116,9 @@ it.skipIf(process.version.startsWith("v18."))(
 
     const user2 = await createJwtClient("alice", ["me"]);
     await expect(
-      user2.runs.wait(thread.thread_id, "agent", { input, config })
+      user2.runs.wait(thread.thread_id, "agent", { input, config }),
     ).rejects.toThrow("HTTP 404");
-  }
+  },
 );
 
 it.skipIf(process.version.startsWith("v18."))(
@@ -133,14 +133,14 @@ it.skipIf(process.version.startsWith("v18."))(
     await expect(
       otherUser.assistants.update(assistant.assistant_id, {
         metadata: { foo: "bar" },
-      })
+      }),
     ).rejects.toThrow("HTTP 404");
 
     // Other user can't delete the assistant
     await expect(
-      otherUser.assistants.delete(assistant.assistant_id)
+      otherUser.assistants.delete(assistant.assistant_id),
     ).rejects.toThrow("HTTP 404");
-  }
+  },
 );
 
 it.skipIf(process.version.startsWith("v18."))(
@@ -153,14 +153,14 @@ it.skipIf(process.version.startsWith("v18."))(
 
     // Other user can't update thread
     await expect(
-      otherUser.threads.update(thread.thread_id, { metadata: { foo: "bar" } })
+      otherUser.threads.update(thread.thread_id, { metadata: { foo: "bar" } }),
     ).rejects.toThrow("HTTP 404");
 
     // Other user can't delete thread
     await expect(otherUser.threads.delete(thread.thread_id)).rejects.toThrow(
-      "HTTP 404"
+      "HTTP 404",
     );
-  }
+  },
 );
 
 it.skipIf(process.version.startsWith("v18."))(
@@ -178,13 +178,13 @@ it.skipIf(process.version.startsWith("v18."))(
     });
 
     const chunks = await gatherIterator(
-      otherUser.runs.joinStream(thread.thread_id, run.run_id)
+      otherUser.runs.joinStream(thread.thread_id, run.run_id),
     );
 
     expect(chunks).toMatchObject([
       { event: "error", data: { message: expect.stringContaining("404") } },
     ]);
-  }
+  },
 );
 
 it.skipIf(process.version.startsWith("v18."))("store auth", async () => {
@@ -213,17 +213,17 @@ it.skipIf(process.version.startsWith("v18."))("store auth", async () => {
 
   // Test store access control
   await expect(userA.store.getItem(["ALL"], "key_one")).rejects.toThrow(
-    "HTTP 403"
+    "HTTP 403",
   );
   await expect(
-    userA.store.putItem(["ALL"], "key_one", { foo: "bar" })
+    userA.store.putItem(["ALL"], "key_one", { foo: "bar" }),
   ).rejects.toThrow("HTTP 403");
   await expect(userA.store.deleteItem(["ALL"], "key_one")).rejects.toThrow(
-    "HTTP 403"
+    "HTTP 403",
   );
   await expect(userA.store.searchItems(["ALL"])).rejects.toThrow("HTTP 403");
   await expect(userA.store.listNamespaces({ prefix: ["ALL"] })).rejects.toThrow(
-    "HTTP 403"
+    "HTTP 403",
   );
 
   // Test owner can access their own store
@@ -236,7 +236,7 @@ it.skipIf(process.version.startsWith("v18."))("store auth", async () => {
   });
 
   expect(
-    await userA.store.listNamespaces({ prefix: ["johndoe"] })
+    await userA.store.listNamespaces({ prefix: ["johndoe"] }),
   ).toMatchObject({ namespaces: [["johndoe"]] });
 
   // Test other user can access their own store
@@ -247,7 +247,7 @@ it.skipIf(process.version.startsWith("v18."))("store auth", async () => {
     items: [{ key: "key_one", value: { text: "test user B" } }],
   });
   expect(await userB.store.listNamespaces({ prefix: ["alice"] })).toMatchObject(
-    { namespaces: [["alice"]] }
+    { namespaces: [["alice"]] },
   );
 });
 
@@ -264,7 +264,7 @@ it.skipIf(process.version.startsWith("v18."))("run cancellation", async () => {
 
   // Other user can't cancel the run
   await expect(
-    otherUser.runs.cancel(thread.thread_id, run.run_id)
+    otherUser.runs.cancel(thread.thread_id, run.run_id),
   ).rejects.toThrow("HTTP 404");
 
   // Owner can cancel their own run
@@ -285,15 +285,15 @@ it.skipIf(process.version.startsWith("v18."))(
 
     // Another user cannot get this assistant
     await expect(
-      otherUser.assistants.get(assistant.assistant_id)
+      otherUser.assistants.get(assistant.assistant_id),
     ).rejects.toThrow("HTTP 404");
 
     // Test invalid assistant IDs
     const nonexistantUuid = crypto.randomUUID();
     await expect(owner.assistants.get(nonexistantUuid)).rejects.toThrow(
-      "HTTP 404"
+      "HTTP 404",
     );
-  }
+  },
 );
 
 it.skipIf(process.version.startsWith("v18."))(
@@ -312,9 +312,9 @@ it.skipIf(process.version.startsWith("v18."))(
 
     // Another user can't access the graph
     await expect(
-      otherUser.assistants.getGraph(assistant.assistant_id)
+      otherUser.assistants.getGraph(assistant.assistant_id),
     ).rejects.toThrow("HTTP 404");
-  }
+  },
 );
 
 it.skipIf(process.version.startsWith("v18."))(
@@ -348,14 +348,14 @@ it.skipIf(process.version.startsWith("v18."))(
 
     // Another user cannot access or modify state
     await expect(otherUser.threads.getState(thread.thread_id)).rejects.toThrow(
-      "HTTP 404"
+      "HTTP 404",
     );
     await expect(
       otherUser.threads.updateState(thread.thread_id, {
         values: { sleep: 432 },
-      })
+      }),
     ).rejects.toThrow("HTTP 404");
-  }
+  },
 );
 
 it.skipIf(process.version.startsWith("v18."))("run operations", async () => {
@@ -374,7 +374,7 @@ it.skipIf(process.version.startsWith("v18."))("run operations", async () => {
   // Owner can list runs
   const runs = await owner.runs.list(thread.thread_id);
   expect(runs).toMatchObject(
-    expect.arrayContaining([expect.objectContaining({ run_id: run.run_id })])
+    expect.arrayContaining([expect.objectContaining({ run_id: run.run_id })]),
   );
 
   // Owner can get specific run
@@ -383,18 +383,18 @@ it.skipIf(process.version.startsWith("v18."))("run operations", async () => {
 
   // Another user cannot access runs, cancel or delete a run not owned by them
   await expect(otherUser.runs.list(thread.thread_id)).rejects.toThrow(
-    "HTTP 404"
+    "HTTP 404",
   );
   await expect(
-    otherUser.runs.get(thread.thread_id, run.run_id)
+    otherUser.runs.get(thread.thread_id, run.run_id),
   ).rejects.toThrow("HTTP 404");
 
   await expect(
-    otherUser.runs.cancel(thread.thread_id, run.run_id, true)
+    otherUser.runs.cancel(thread.thread_id, run.run_id, true),
   ).rejects.toThrow("HTTP 404");
 
   await expect(
-    otherUser.runs.delete(thread.thread_id, run.run_id)
+    otherUser.runs.delete(thread.thread_id, run.run_id),
   ).rejects.toThrow("HTTP 404");
 
   // Owner can cancel run
@@ -403,7 +403,7 @@ it.skipIf(process.version.startsWith("v18."))("run operations", async () => {
   // Owner can delete run
   await owner.runs.delete(thread.thread_id, run.run_id);
   await expect(owner.runs.get(thread.thread_id, run.run_id)).rejects.toThrow(
-    "HTTP 404"
+    "HTTP 404",
   );
 });
 
@@ -419,9 +419,9 @@ it.skipIf(process.version.startsWith("v18."))(
     };
 
     await expect(
-      otherUser.runs.create(thread.thread_id, "agent", { input, config })
+      otherUser.runs.create(thread.thread_id, "agent", { input, config }),
     ).rejects.toThrow("HTTP 404");
-  }
+  },
 );
 
 it.skipIf(process.version.startsWith("v18."))(
@@ -443,9 +443,9 @@ it.skipIf(process.version.startsWith("v18."))(
 
     // Other user cannot list runs
     await expect(otherUser.runs.list(thread.thread_id)).rejects.toThrow(
-      "HTTP 404"
+      "HTTP 404",
     );
-  }
+  },
 );
 
 it.skipIf(process.version.startsWith("v18."))(
@@ -462,9 +462,9 @@ it.skipIf(process.version.startsWith("v18."))(
 
     // Other user attempts to get the run
     await expect(
-      otherUser.runs.get(thread.thread_id, run.run_id)
+      otherUser.runs.get(thread.thread_id, run.run_id),
     ).rejects.toThrow("HTTP 404");
-  }
+  },
 );
 
 it.skipIf(process.version.startsWith("v18."))(
@@ -481,9 +481,9 @@ it.skipIf(process.version.startsWith("v18."))(
 
     // Other user tries to join the run
     await expect(
-      otherUser.runs.join(thread.thread_id, run.run_id)
+      otherUser.runs.join(thread.thread_id, run.run_id),
     ).rejects.toThrow("HTTP 404");
-  }
+  },
 );
 
 it.skipIf(process.version.startsWith("v18."))(
@@ -498,9 +498,9 @@ it.skipIf(process.version.startsWith("v18."))(
 
     // Other user tries to wait on run result
     await expect(
-      otherUser.runs.wait(thread.thread_id, "agent", { input, config })
+      otherUser.runs.wait(thread.thread_id, "agent", { input, config }),
     ).rejects.toThrow("HTTP 404");
-  }
+  },
 );
 
 it.skipIf(process.version.startsWith("v18."))(
@@ -517,13 +517,13 @@ it.skipIf(process.version.startsWith("v18."))(
 
     // Other user tries to join_stream
     const chunks = await gatherIterator(
-      otherUser.runs.joinStream(thread.thread_id, run.run_id)
+      otherUser.runs.joinStream(thread.thread_id, run.run_id),
     );
     expect(chunks).toHaveLength(1);
     expect(chunks).toMatchObject([
       { event: "error", data: { message: expect.stringContaining("404") } },
     ]);
-  }
+  },
 );
 
 it.skipIf(process.version.startsWith("v18."))(
@@ -540,11 +540,11 @@ it.skipIf(process.version.startsWith("v18."))(
     });
 
     await expect(
-      otherUser.runs.cancel(thread.thread_id, run.run_id)
+      otherUser.runs.cancel(thread.thread_id, run.run_id),
     ).rejects.toThrow("HTTP 404");
 
     await owner.runs.cancel(thread.thread_id, run.run_id);
-  }
+  },
 );
 
 it.skipIf(process.version.startsWith("v18."))(
@@ -561,11 +561,11 @@ it.skipIf(process.version.startsWith("v18."))(
     });
 
     await expect(
-      otherUser.runs.delete(thread.thread_id, run.run_id)
+      otherUser.runs.delete(thread.thread_id, run.run_id),
     ).rejects.toThrow("HTTP 404");
 
     await owner.runs.cancel(thread.thread_id, run.run_id);
-  }
+  },
 );
 
 it.skipIf(process.version.startsWith("v18."))(
@@ -579,9 +579,9 @@ it.skipIf(process.version.startsWith("v18."))(
 
     // Other user tries to update state
     await expect(
-      otherUser.threads.updateState(thread.thread_id, newState)
+      otherUser.threads.updateState(thread.thread_id, newState),
     ).rejects.toThrow("HTTP 404");
-  }
+  },
 );
 
 it.skipIf(process.version.startsWith("v18."))(
@@ -607,9 +607,9 @@ it.skipIf(process.version.startsWith("v18."))(
     }
 
     await expect(
-      otherUser.threads.getState(thread.thread_id, checkpointId)
+      otherUser.threads.getState(thread.thread_id, checkpointId),
     ).rejects.toThrow("HTTP 404");
-  }
+  },
 );
 
 it.skipIf(process.version.startsWith("v18."))(
@@ -626,12 +626,12 @@ it.skipIf(process.version.startsWith("v18."))(
     expect(result.metadata?.foo).toBe(someId);
 
     await expect(
-      otherUser.assistants.getVersions(assistant.assistant_id)
+      otherUser.assistants.getVersions(assistant.assistant_id),
     ).rejects.toThrow("HTTP 404");
     await expect(
-      otherUser.assistants.setLatest(assistant.assistant_id, 1)
+      otherUser.assistants.setLatest(assistant.assistant_id, 1),
     ).rejects.toThrow("HTTP 404");
-  }
+  },
 );
 
 it.skipIf(process.version.startsWith("v18."))(
@@ -647,13 +647,13 @@ it.skipIf(process.version.startsWith("v18."))(
     expect(updated.metadata?.foo).toBe("bar");
 
     await expect(
-      otherUser.assistants.setLatest(assistant.assistant_id, 1)
+      otherUser.assistants.setLatest(assistant.assistant_id, 1),
     ).rejects.toThrow("HTTP 404");
 
     const result = await owner.assistants.setLatest(assistant.assistant_id, 1);
     expect(result.assistant_id).toBe(assistant.assistant_id);
     expect(result.version).toBe(1);
-  }
+  },
 );
 
 it.skipIf(process.version.startsWith("v18."))(
@@ -668,20 +668,20 @@ it.skipIf(process.version.startsWith("v18."))(
     // each user should only see their own assistants
     const results1 = await user1.assistants.search();
     expect(results1).toContainEqual(
-      expect.objectContaining({ assistant_id: assistant1.assistant_id })
+      expect.objectContaining({ assistant_id: assistant1.assistant_id }),
     );
     expect(results1).not.toContainEqual(
-      expect.objectContaining({ assistant_id: assistant2.assistant_id })
+      expect.objectContaining({ assistant_id: assistant2.assistant_id }),
     );
 
     const results2 = await user2.assistants.search();
     expect(results2).toContainEqual(
-      expect.objectContaining({ assistant_id: assistant2.assistant_id })
+      expect.objectContaining({ assistant_id: assistant2.assistant_id }),
     );
     expect(results2).not.toContainEqual(
-      expect.objectContaining({ assistant_id: assistant1.assistant_id })
+      expect.objectContaining({ assistant_id: assistant1.assistant_id }),
     );
-  }
+  },
 );
 
 it.skipIf(process.version.startsWith("v18."))(
@@ -694,13 +694,13 @@ it.skipIf(process.version.startsWith("v18."))(
 
     // Other user can't copy the thread
     await expect(otherUser.threads.copy(thread.thread_id)).rejects.toThrow(
-      "HTTP 409"
+      "HTTP 409",
     );
 
     // Owner can copy the thread
     const copiedThread = await owner.threads.copy(thread.thread_id);
     expect(copiedThread).not.toBeNull();
-  }
+  },
 );
 
 it.skipIf(process.version.startsWith("v18."))(
@@ -723,9 +723,9 @@ it.skipIf(process.version.startsWith("v18."))(
     expect(copiedThread.thread_id).not.toBe(thread.thread_id);
 
     await expect(reader.threads.copy(thread.thread_id)).rejects.toThrow(
-      "HTTP 403: Not authorized"
+      "HTTP 403: Not authorized",
     );
-  }
+  },
 );
 
 it.skipIf(process.version.startsWith("v18."))(
@@ -742,9 +742,9 @@ it.skipIf(process.version.startsWith("v18."))(
     expect(history).toHaveLength(5);
 
     await expect(
-      otherUser.threads.getHistory(thread.thread_id)
+      otherUser.threads.getHistory(thread.thread_id),
     ).rejects.toThrow("HTTP 404");
-  }
+  },
 );
 
 it.skipIf(process.version.startsWith("v18."))(
@@ -763,11 +763,11 @@ it.skipIf(process.version.startsWith("v18."))(
 
     expect(values).not.toBeNull();
     const chunks = await gatherIterator(
-      owner.runs.stream(null, assistant.assistant_id, { input, config })
+      owner.runs.stream(null, assistant.assistant_id, { input, config }),
     );
 
     expect(chunks.find((i) => i.event === "error")).not.toBeDefined();
-  }
+  },
 );
 
 it("info endpoint", async () => {
@@ -881,9 +881,9 @@ describe("auth filter matching", () => {
       name: string,
       metadata: Record<string, unknown> | undefined,
       filters: AuthFilters,
-      expected: boolean
+      expected: boolean,
     ) => {
       expect(isAuthMatching(metadata, filters)).toBe(expected);
-    }
+    },
   );
 });

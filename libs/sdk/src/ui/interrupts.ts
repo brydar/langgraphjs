@@ -6,7 +6,7 @@ export function extractInterrupts<InterruptType = unknown>(
     isLoading: boolean;
     threadState: ThreadState | undefined;
     error: unknown;
-  }
+  },
 ): Interrupt<InterruptType> | undefined {
   if (
     typeof values === "object" &&

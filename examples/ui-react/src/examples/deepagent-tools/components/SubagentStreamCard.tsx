@@ -123,7 +123,7 @@ export function SubagentStreamCard({
   // Get streaming content from messages
   const streamingContent = useMemo(
     () => getStreamingContent(subagent.messages as SubagentMessage[]),
-    [subagent.messages]
+    [subagent.messages],
   );
 
   // Get tool calls from the subagent

@@ -74,7 +74,7 @@ export function ParallelResearch() {
   });
 
   const [selectedResearch, setSelectedResearch] = useState<ResearchId | null>(
-    null
+    null,
   );
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -192,7 +192,7 @@ export function ParallelResearch() {
        */
       stream.submit({ messages: [{ content, type: "human" } as any] });
     },
-    [stream]
+    [stream],
   );
 
   const handleSelectResearch = useCallback((researchId: ResearchId) => {

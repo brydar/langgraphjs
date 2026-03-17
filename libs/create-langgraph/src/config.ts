@@ -49,7 +49,7 @@ export const CJS_EXPORT_PATTERN = /^(?:module\.)?exports\./;
  */
 export function scanContentForAgents(
   content: string,
-  filePath: string = "test.ts"
+  filePath: string = "test.ts",
 ): AgentInfo[] {
   const agents: AgentInfo[] = [];
   const lines = content.split("\n");
@@ -111,7 +111,7 @@ async function scanFileForAgents(filePath: string): Promise<AgentInfo[]> {
  */
 async function findTsJsFiles(
   dir: string,
-  files: string[] = []
+  files: string[] = [],
 ): Promise<string[]> {
   const entries = await fs.readdir(dir, { withFileTypes: true });
 
@@ -122,7 +122,7 @@ async function findTsJsFiles(
     if (
       entry.isDirectory() &&
       !["node_modules", "dist", ".git", ".turbo", "build", "coverage"].includes(
-        entry.name
+        entry.name,
       )
     ) {
       await findTsJsFiles(fullPath, files);
@@ -154,7 +154,7 @@ export async function generateConfig(targetPath?: string) {
     await fs.access(configPath);
     const overwrite = await confirm({
       message: `${color.yellow(
-        "langgraph.json"
+        "langgraph.json",
       )} already exists. Do you want to overwrite it?`,
       initialValue: false,
     });
@@ -183,8 +183,8 @@ export async function generateConfig(targetPath?: string) {
     s.stop("No TypeScript or JavaScript files found");
     outro(
       color.yellow(
-        "No TypeScript or JavaScript files found in the current directory."
-      )
+        "No TypeScript or JavaScript files found in the current directory.",
+      ),
     );
     return;
   }
@@ -209,8 +209,8 @@ export async function generateConfig(targetPath?: string) {
           - ${color.cyan("createReactAgent({ ... })")}
           - ${color.cyan("new StateGraph(...).compile()")}
           - ${color.cyan("workflow.compile()")}
-        `
-      )
+        `,
+      ),
     );
     return;
   }
@@ -224,8 +224,8 @@ export async function generateConfig(targetPath?: string) {
     console.log();
     console.log(
       color.yellow(
-        `⚠️  Found ${unexportedAgents.length} agent(s) that are not exported:`
-      )
+        `⚠️  Found ${unexportedAgents.length} agent(s) that are not exported:`,
+      ),
     );
     for (const agent of unexportedAgents) {
       const relativePath = path.relative(targetRootPath, agent.filePath);
@@ -233,16 +233,16 @@ export async function generateConfig(targetPath?: string) {
         color.dim(
           `   • ${color.white(agent.name)} at ${relativePath}:${
             agent.lineNumber
-          }`
-        )
+          }`,
+        ),
       );
     }
     console.log(
       color.dim(
         `   Add ${color.cyan(
-          "export"
-        )} keyword to include them in the configuration.`
-      )
+          "export",
+        )} keyword to include them in the configuration.`,
+      ),
     );
     console.log();
   }
@@ -255,8 +255,8 @@ export async function generateConfig(targetPath?: string) {
           
           To include an agent in the configuration, make sure it's exported:
           ${color.cyan("export const agent = createAgent({ ... });")}
-        `
-      )
+        `,
+      ),
     );
     return;
   }
@@ -343,8 +343,8 @@ export async function generateConfig(targetPath?: string) {
       ${color.cyan("Next steps:")}
       - Review the generated ${color.yellow("langgraph.json")}
       - Run ${color.cyan(
-        "npx @langchain/langgraph-cli@latest dev"
+        "npx @langchain/langgraph-cli@latest dev",
       )} to start the development server
-    `
+    `,
   );
 }

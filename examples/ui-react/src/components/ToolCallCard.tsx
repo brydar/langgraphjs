@@ -171,7 +171,7 @@ function parseWeatherContent(content: string): {
 } | null {
   // Pattern: "Weather in City, Country: Condition, Temp°C, Wind: X km/h, Humidity: Y%"
   const match = content.match(
-    /Weather in ([^:]+): ([^,]+), ([^,]+), Wind: ([^,]+), Humidity: (.+)/
+    /Weather in ([^:]+): ([^,]+), ([^,]+), Wind: ([^,]+), Humidity: (.+)/,
   );
   if (!match) return null;
   return {
@@ -321,7 +321,7 @@ function CalculatorToolCallCard({
 }) {
   const isLoading = state === "pending";
   const calcResult = parseCalculatorResult(
-    result?.content as string | undefined
+    result?.content as string | undefined,
   );
   const isError = calcResult === null && result != null;
 

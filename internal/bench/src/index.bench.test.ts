@@ -101,7 +101,7 @@ describe("Large Data Handling", () => {
           null,
         ]
           .concat(
-            Array(5).fill(["hi?".repeat(10), true, 1, 6327816386138, null])
+            Array(5).fill(["hi?".repeat(10), true, 1, 6327816386138, null]),
           )
           .flat();
       }

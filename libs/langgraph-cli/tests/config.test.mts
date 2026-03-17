@@ -36,13 +36,13 @@ describe("config to watch", () => {
 
     const localDeps = await assembleLocalDeps(
       path.resolve(__dirname, "./unit_tests/langgraph.json"),
-      config
+      config,
     );
 
     const watch = await configToWatch(
       path.resolve(__dirname, "./unit_tests/langgraph.json"),
       config,
-      localDeps
+      localDeps,
     );
 
     expect(watch).toEqual([
@@ -66,13 +66,13 @@ describe("config to watch", () => {
 
     const localDeps = await assembleLocalDeps(
       path.resolve(__dirname, "./unit_tests/langgraph.json"),
-      config
+      config,
     );
 
     const watch = await configToWatch(
       path.resolve(__dirname, "./unit_tests/langgraph.json"),
       config,
-      localDeps
+      localDeps,
     );
 
     expect(watch).toEqual([
@@ -114,7 +114,7 @@ describe("config to docker", () => {
     const actual = await configToDocker(
       PATH_TO_CONFIG,
       config,
-      await assembleLocalDeps(PATH_TO_CONFIG, config)
+      await assembleLocalDeps(PATH_TO_CONFIG, config),
     );
 
     expect(actual).toEqual(dedenter`
@@ -145,7 +145,7 @@ describe("config to docker", () => {
     const actual = await configToDocker(
       PATH_TO_CONFIG,
       config,
-      await assembleLocalDeps(PATH_TO_CONFIG, config)
+      await assembleLocalDeps(PATH_TO_CONFIG, config),
     );
 
     expect(actual).toEqual(dedenter`
@@ -179,7 +179,7 @@ describe("config to docker", () => {
       await configToDocker(
         PATH_TO_CONFIG,
         config,
-        await assembleLocalDeps(PATH_TO_CONFIG, config)
+        await assembleLocalDeps(PATH_TO_CONFIG, config),
       );
     }).rejects.toThrowError(/Could not find local dependency/);
 
@@ -195,7 +195,7 @@ describe("config to docker", () => {
       await configToDocker(
         PATH_TO_CONFIG,
         config,
-        await assembleLocalDeps(PATH_TO_CONFIG, config)
+        await assembleLocalDeps(PATH_TO_CONFIG, config),
       );
     }).rejects.toThrowError(/Could not find local module/);
   });
@@ -211,7 +211,7 @@ describe("config to docker", () => {
     const actual = await configToDocker(
       PATH_TO_CONFIG,
       config,
-      await assembleLocalDeps(PATH_TO_CONFIG, config)
+      await assembleLocalDeps(PATH_TO_CONFIG, config),
     );
 
     expect(actual).toEqual(dedenter`
@@ -240,7 +240,7 @@ describe("config to docker", () => {
         version = "0.1"
         dependencies = ["langchain"]
       `,
-      { encoding: "utf-8" }
+      { encoding: "utf-8" },
     );
 
     const graphs = { agent: "./graphs/agent.py:graph" };
@@ -253,7 +253,7 @@ describe("config to docker", () => {
     const actual = await configToDocker(
       PATH_TO_CONFIG,
       config,
-      await assembleLocalDeps(PATH_TO_CONFIG, config)
+      await assembleLocalDeps(PATH_TO_CONFIG, config),
     );
 
     await fs.rm(pyproject);
@@ -280,7 +280,7 @@ describe("config to docker", () => {
     const actual = await configToDocker(
       PATH_TO_CONFIG,
       config,
-      await assembleLocalDeps(PATH_TO_CONFIG, config)
+      await assembleLocalDeps(PATH_TO_CONFIG, config),
     );
 
     expect(actual).toEqual(dedenter`
@@ -315,7 +315,7 @@ describe("config to docker", () => {
     const actual = await configToDocker(
       PATH_TO_CONFIG,
       config,
-      await assembleLocalDeps(PATH_TO_CONFIG, config)
+      await assembleLocalDeps(PATH_TO_CONFIG, config),
     );
 
     // TODO: add support for any packager
@@ -342,7 +342,7 @@ describe("config to docker", () => {
     const actual = await configToDocker(
       PATH_TO_CONFIG,
       config,
-      await assembleLocalDeps(PATH_TO_CONFIG, config)
+      await assembleLocalDeps(PATH_TO_CONFIG, config),
     );
 
     expect(actual).toEqual(dedenter`
@@ -367,7 +367,7 @@ describe("config to docker", () => {
     const actual = await configToDocker(
       PATH_TO_CONFIG,
       config,
-      await assembleLocalDeps(PATH_TO_CONFIG, config)
+      await assembleLocalDeps(PATH_TO_CONFIG, config),
     );
 
     expect(actual).toEqual(dedenter`
@@ -401,7 +401,7 @@ describe("config to docker", () => {
     const actual = await configToDocker(
       PATH_TO_CONFIG,
       config,
-      await assembleLocalDeps(PATH_TO_CONFIG, config)
+      await assembleLocalDeps(PATH_TO_CONFIG, config),
     );
 
     expect(actual).toEqual(dedenter`
@@ -570,7 +570,7 @@ describe("config to compose", () => {
         dependencies: ["."],
         graphs: graph,
       },
-      { watch: true }
+      { watch: true },
     );
 
     expect(yaml.stringify(actual, { blockQuote: "literal" })).toEqual(expected);
@@ -583,7 +583,7 @@ describe("config to compose", () => {
   it("env", async () => {
     const PATH_TO_CONFIG = path.resolve(
       __dirname,
-      "./env_tests/langgraph.json"
+      "./env_tests/langgraph.json",
     );
 
     const graph = { agent: "./agent.py:graph" };
@@ -631,7 +631,7 @@ describe("config to compose", () => {
       {
         watch: true,
         extendEnv: { ANTHROPIC_API_KEY: "key", OPENAI_API_KEY: "key" },
-      }
+      },
     );
 
     expect(yaml.stringify(actual, { blockQuote: "literal" })).toEqual(expected);
@@ -652,10 +652,10 @@ describe("config to compose", () => {
           env: ["OPENAI_API_KEY", "ANTHROPIC_API_KEY"],
           dockerfile_lines: [],
         },
-        { watch: true }
-      )
+        { watch: true },
+      ),
     ).rejects.toThrowError(
-      /Missing environment variables: OPENAI_API_KEY, ANTHROPIC_API_KEY/
+      /Missing environment variables: OPENAI_API_KEY, ANTHROPIC_API_KEY/,
     );
   });
 
@@ -776,7 +776,7 @@ describe("config to compose", () => {
         env: ".env",
         dockerfile_lines: [],
       },
-      { watch: true }
+      { watch: true },
     );
 
     expect(yaml.stringify(actual, { blockQuote: "literal" })).toEqual(expected);
@@ -789,11 +789,11 @@ describe("config to compose", () => {
 
 describe("packaging", () => {
   async function loadConfig(
-    rel: string
+    rel: string,
   ): Promise<[path: string, config: Config]> {
     const res = path.resolve(__dirname, rel);
     const config = getConfig(
-      JSON.parse(await fs.readFile(res, { encoding: "utf-8" }))
+      JSON.parse(await fs.readFile(res, { encoding: "utf-8" })),
     );
     return [res, config];
   }
@@ -801,7 +801,7 @@ describe("packaging", () => {
   it("faux", async () => {
     const { apiDef: actual } = await configToCompose(
       ...(await loadConfig("./packaging_tests/faux/langgraph.json")),
-      { watch: true }
+      { watch: true },
     );
 
     const expected =
@@ -845,7 +845,7 @@ describe("packaging", () => {
   it("js", async () => {
     const { apiDef: actual, rewrite } = await configToCompose(
       ...(await loadConfig("./packaging_tests/js/langgraph.json")),
-      { watch: true }
+      { watch: true },
     );
 
     const expected =
@@ -912,7 +912,7 @@ describe("getBaseImage", () => {
       api_version: "0.7.29",
     });
     expect(getBaseImage(config)).toBe(
-      "langchain/langgraphjs-api:0.7.29-node22"
+      "langchain/langgraphjs-api:0.7.29-node22",
     );
   });
 
@@ -943,7 +943,7 @@ describe("getBaseImage", () => {
     });
     // Parameter overrides config
     expect(getBaseImage(config, "0.8.0")).toBe(
-      "langchain/langgraphjs-api:0.8.0-node22"
+      "langchain/langgraphjs-api:0.8.0-node22",
     );
   });
 
@@ -953,7 +953,7 @@ describe("getBaseImage", () => {
       graphs: { agent: "./agent.js:graph" },
     });
     expect(getBaseImage(config, "0.7.29")).toBe(
-      "langchain/langgraphjs-api:0.7.29-node22"
+      "langchain/langgraphjs-api:0.7.29-node22",
     );
   });
 
@@ -964,7 +964,7 @@ describe("getBaseImage", () => {
       api_version: "0.7.29-rc1",
     });
     expect(getBaseImage(config)).toBe(
-      "langchain/langgraphjs-api:0.7.29-rc1-node22"
+      "langchain/langgraphjs-api:0.7.29-rc1-node22",
     );
   });
 
@@ -986,7 +986,7 @@ it("node config and python config", () => {
       dockerfile_lines: [],
       dependencies: ["."],
       graphs: { agent: "./route.ts:agent" },
-    })
+    }),
   ).toEqual({
     node_version: "20",
     dockerfile_lines: [],
@@ -1003,7 +1003,7 @@ it("node config and python config", () => {
       pip_config_file: undefined,
       dependencies: ["."],
       graphs: { agent: "./agent.py:graph" },
-    })
+    }),
   ).toEqual({
     python_version: "3.11",
     pip_config_file: undefined,
@@ -1018,7 +1018,7 @@ it("node config and python config", () => {
     getConfig({
       dependencies: ["."],
       graphs: { agent: "./agent.py:graph" },
-    })
+    }),
   ).toEqual({
     python_version: "3.11",
     pip_config_file: undefined,
@@ -1041,7 +1041,7 @@ it("node config and python config", () => {
     getConfig({
       dependencies: ["."],
       graphs: { js: "./agent.js:graph", py: "./agent.py:graph" },
-    })
+    }),
   ).toEqual({
     python_version: "3.12",
     node_version: "20",
@@ -1059,7 +1059,7 @@ it("node config and python config", () => {
         python_version: "3.11",
         graphs: { agent: "./agent.py:graph", js: "./agent.js:graph" },
         dependencies: ["."],
-      })
+      }),
     )
     .toThrow("Only Python 3.12 is supported with Node.js");
 
@@ -1069,7 +1069,7 @@ it("node config and python config", () => {
       getConfig({
         graphs: { agent: "agent.py" },
         dependencies: ["."],
-      })
+      }),
     )
     .toThrow(`Import string must be in format '<file>:<export>'`);
 
@@ -1080,7 +1080,7 @@ it("node config and python config", () => {
         graphs: { agent: "./agent.py:graph" },
         // @ts-expect-error
         dependencies: [], // Empty array
-      })
+      }),
     )
     .toThrow("You need to specify at least one dependency");
 
@@ -1092,7 +1092,7 @@ it("node config and python config", () => {
         python_version: "3.10", // Unsupported version
         graphs: { agent: "./agent.py:graph" },
         dependencies: ["."],
-      })
+      }),
     )
     .toThrow();
 
@@ -1103,7 +1103,7 @@ it("node config and python config", () => {
         // @ts-expect-error
         node_version: "18", // Unsupported version
         graphs: { agent: "./agent.js:graph" },
-      })
+      }),
     )
     .toThrow();
 
@@ -1113,7 +1113,7 @@ it("node config and python config", () => {
       node_version: "22",
       graphs: { agent: "./agent.js:graph" },
       api_version: "0.7.29",
-    })
+    }),
   ).toEqual({
     node_version: "22",
     dockerfile_lines: [],
@@ -1128,7 +1128,7 @@ it("node config and python config", () => {
       node_version: "20",
       graphs: { agent: "./agent.js:graph" },
       api_version: "0.7",
-    })
+    }),
   ).toEqual({
     node_version: "20",
     dockerfile_lines: [],
@@ -1145,7 +1145,7 @@ it("node config and python config", () => {
         graphs: { agent: "./agent.js:graph" },
         api_version: "0.7.29",
         _INTERNAL_docker_tag: "custom-tag",
-      })
+      }),
     )
     .toThrow("Cannot specify both _INTERNAL_docker_tag and api_version.");
 
@@ -1156,7 +1156,7 @@ it("node config and python config", () => {
         node_version: "22",
         graphs: { agent: "./agent.js:graph" },
         api_version: "0.7.29.1",
-      })
+      }),
     )
     .toThrow();
 
@@ -1167,7 +1167,7 @@ it("node config and python config", () => {
         node_version: "22",
         graphs: { agent: "./agent.js:graph" },
         api_version: "abc",
-      })
+      }),
     )
     .toThrow();
 
@@ -1177,7 +1177,7 @@ it("node config and python config", () => {
       node_version: "22",
       graphs: { agent: "./agent.js:graph" },
       api_version: "0.7.29-rc1",
-    })
+    }),
   ).toEqual({
     node_version: "22",
     dockerfile_lines: [],

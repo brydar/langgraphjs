@@ -7,5 +7,5 @@ import { Layout } from "./components/Layout";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Layout />
-  </StrictMode>
+  </StrictMode>,
 );

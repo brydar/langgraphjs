@@ -79,7 +79,7 @@ function getExampleFromHash(): string | null {
 
 export function Layout() {
   const [selectedExample, setSelectedExample] = useState<string | null>(() =>
-    getExampleFromHash()
+    getExampleFromHash(),
   );
   const [sidebarOpen, setSidebarOpen] = useState(false);
 

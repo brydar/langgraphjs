@@ -160,7 +160,7 @@ export function SessionPersistence() {
     if (stream.isLoading && threadId) {
       // Check if there's a stored run ID for this thread (indicates reconnection)
       const storedRunId = window.sessionStorage.getItem(
-        `lg:stream:${threadId}`
+        `lg:stream:${threadId}`,
       );
       if (storedRunId) {
         setHasReconnected(true);
@@ -174,7 +174,7 @@ export function SessionPersistence() {
     (content: string) => {
       stream.submit({ messages: [{ content, type: "human" }] });
     },
-    [stream]
+    [stream],
   );
 
   /**

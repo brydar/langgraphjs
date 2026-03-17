@@ -35,7 +35,7 @@ const [{ host, cleanup }, organizationId] = await Promise.all([
       } catch (error) {
         logger.warn(
           "Failed to get organization ID. Tracing to LangSmith will not work.",
-          { error }
+          { error },
         );
       }
     }

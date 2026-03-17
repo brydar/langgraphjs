@@ -109,8 +109,8 @@ export function Sidebar({
                             isSelected
                               ? "bg-brand-dark/30 text-white border-brand-dark/50"
                               : example.ready
-                              ? "text-neutral-400 hover:bg-neutral-800/50 hover:text-neutral-200 border-transparent"
-                              : "text-neutral-600 cursor-not-allowed border-transparent"
+                                ? "text-neutral-400 hover:bg-neutral-800/50 hover:text-neutral-200 border-transparent"
+                                : "text-neutral-600 cursor-not-allowed border-transparent"
                           }
                         `}
                         >
@@ -121,8 +121,8 @@ export function Sidebar({
                               isSelected
                                 ? "text-brand-accent"
                                 : example.ready
-                                ? "text-neutral-500"
-                                : "text-neutral-700"
+                                  ? "text-neutral-500"
+                                  : "text-neutral-700"
                             }
                           `}
                           >
@@ -149,7 +149,7 @@ export function Sidebar({
                   </div>
                 </div>
               );
-            }
+            },
           )}
         </nav>
 

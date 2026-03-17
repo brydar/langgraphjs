@@ -29,7 +29,7 @@ function hasContent(message: Message): boolean {
   }
   if (Array.isArray(message.content)) {
     return message.content.some(
-      (c) => c.type === "text" && c.text.trim().length > 0
+      (c) => c.type === "text" && c.text.trim().length > 0,
     );
   }
   return false;
@@ -83,7 +83,7 @@ export function DeepAgentDemo() {
   const allSubagentsDone =
     hasSubagents &&
     [...stream.subagents.values()].every(
-      (s) => s.status === "complete" || s.status === "error"
+      (s) => s.status === "complete" || s.status === "error",
     );
 
   // Filter messages: only show human messages and AI messages with actual content
@@ -118,10 +118,10 @@ export function DeepAgentDemo() {
           config: {
             recursion_limit: 100,
           },
-        }
+        },
       );
     },
-    [stream]
+    [stream],
   );
 
   /**

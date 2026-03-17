@@ -12,8 +12,8 @@ export const getWeather = tool(
     // Use Open-Meteo geocoding API to get coordinates
     const geoResponse = await fetch(
       `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(
-        location
-      )}&count=1`
+        location,
+      )}&count=1`,
     );
     const geoData = await geoResponse.json();
 
@@ -28,7 +28,7 @@ export const getWeather = tool(
 
     // Fetch weather from Open-Meteo API (no API key required)
     const weatherResponse = await fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m`
+      `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m`,
     );
     const weatherData = await weatherResponse.json();
 
@@ -76,7 +76,7 @@ export const getWeather = tool(
     schema: z.object({
       location: z.string().describe("The city or location to get weather for"),
     }),
-  }
+  },
 );
 
 export const agent = createAgent({

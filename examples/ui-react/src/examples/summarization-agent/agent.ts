@@ -39,10 +39,10 @@ export const calculate = tool(
       expression: z
         .string()
         .describe(
-          "The mathematical expression to evaluate, e.g., '2 + 2' or '(10 * 5) / 2'"
+          "The mathematical expression to evaluate, e.g., '2 + 2' or '(10 * 5) / 2'",
         ),
     }),
-  }
+  },
 );
 
 /**
@@ -62,7 +62,7 @@ export const takeNote = tool(
       title: z.string().describe("The title of the note"),
       content: z.string().describe("The content of the note"),
     }),
-  }
+  },
 );
 
 /**

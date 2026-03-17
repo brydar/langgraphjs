@@ -76,7 +76,7 @@ export function ToolProgressCard({ toolProgress }: ToolProgressCardProps) {
   const data = getProgressData(toolProgress.data);
   const progress = Math.min(
     100,
-    Math.max(0, Math.round((data?.progress ?? 0) * 100))
+    Math.max(0, Math.round((data?.progress ?? 0) * 100)),
   );
   const message = data?.message ?? "Starting...";
   const completed = data?.completed ?? [];

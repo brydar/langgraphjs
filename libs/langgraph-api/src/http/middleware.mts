@@ -12,7 +12,7 @@ export const cors = (
         expose_headers?: string[];
         max_age?: number;
       }
-    | undefined
+    | undefined,
 ): MiddlewareHandler => {
   if (cors == null) {
     return honoCors({
@@ -38,13 +38,13 @@ export const cors = (
 
     if (!headersSet.has("content-location")) {
       console.warn(
-        "Adding missing `Content-Location` header in `cors.expose_headers`."
+        "Adding missing `Content-Location` header in `cors.expose_headers`.",
       );
       cors.expose_headers.push("content-location");
     }
     if (!headersSet.has("x-pagination-total")) {
       console.warn(
-        "Adding missing `X-Pagination-Total` header in `cors.expose_headers`."
+        "Adding missing `X-Pagination-Total` header in `cors.expose_headers`.",
       );
       cors.expose_headers.push("x-pagination-total");
     }

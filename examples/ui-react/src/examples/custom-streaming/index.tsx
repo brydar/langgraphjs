@@ -39,7 +39,7 @@ function hasContent(message: Message): boolean {
   }
   if (Array.isArray(message.content)) {
     return message.content.some(
-      (c) => c.type === "text" && c.text.trim().length > 0
+      (c) => c.type === "text" && c.text.trim().length > 0,
     );
   }
   return false;
@@ -103,7 +103,7 @@ export function CustomStreaming() {
       });
       stream.submit({ messages: [{ content, type: "human" } as any] });
     },
-    [stream]
+    [stream],
   );
 
   const hasMessages = stream.messages.length > 0;
@@ -136,7 +136,7 @@ export function CustomStreaming() {
   const getEventsForToolCall = useCallback(
     (toolCallId: string) => {
       const status = statusDataArray.filter(
-        (d) => d.toolCall?.id === toolCallId
+        (d) => d.toolCall?.id === toolCallId,
       );
       const progress = progressDataArray.filter(
         (d) =>
@@ -144,14 +144,14 @@ export function CustomStreaming() {
           /**
            * don't show progress if status is complete
            */
-          (status.length === 0 || status.some((s) => s.status !== "complete"))
+          (status.length === 0 || status.some((s) => s.status !== "complete")),
       );
       const fileStatus = fileStatusDataArray.filter(
-        (d) => d.toolCall?.id === toolCallId
+        (d) => d.toolCall?.id === toolCallId,
       );
       return { progress, status, fileStatus };
     },
-    [progressDataArray, statusDataArray, fileStatusDataArray]
+    [progressDataArray, statusDataArray, fileStatusDataArray],
   );
 
   return (
@@ -171,7 +171,7 @@ export function CustomStreaming() {
               {stream.messages.map((message, idx) => {
                 const customCards =
                   message.type === "ai"
-                    ? message.tool_calls?.map((toolCall) => {
+                    ? (message.tool_calls?.map((toolCall) => {
                         const { progress, status, fileStatus } =
                           getEventsForToolCall(toolCall.id!);
                         return (
@@ -187,7 +187,7 @@ export function CustomStreaming() {
                             ))}
                           </div>
                         );
-                      }) ?? []
+                      }) ?? [])
                     : [];
 
                 return [
@@ -199,7 +199,7 @@ export function CustomStreaming() {
               {/* Show loading indicator when streaming and no content yet */}
               {stream.isLoading &&
                 !stream.messages.some(
-                  (m) => m.type === "ai" && hasContent(m)
+                  (m) => m.type === "ai" && hasContent(m),
                 ) &&
                 !hasCustomData && <LoadingIndicator />}
 

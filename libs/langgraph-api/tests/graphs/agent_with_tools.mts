@@ -33,7 +33,7 @@ const weatherTool = tool(
     schema: z.object({
       query: z.string().describe("The location to get weather for."),
     }),
-  }
+  },
 );
 
 const aiWithToolCall = new AIMessage({
@@ -59,7 +59,7 @@ async function agentNode(state: typeof MessagesAnnotation.State) {
 }
 
 function shouldContinue(
-  state: typeof MessagesAnnotation.State
+  state: typeof MessagesAnnotation.State,
 ): "tools" | typeof END {
   const lastMessage = state.messages[state.messages.length - 1];
   if (!isAIMessage(lastMessage)) return END;

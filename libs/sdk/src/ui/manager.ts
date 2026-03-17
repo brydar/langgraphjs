@@ -33,7 +33,7 @@ export const REMOVE_ALL_MESSAGES = "__remove_all__";
 
 type GetUpdateType<
   Bag extends BagTemplate,
-  StateType extends Record<string, unknown>
+  StateType extends Record<string, unknown>,
 > = Bag extends { UpdateType: unknown }
   ? Bag["UpdateType"]
   : Partial<StateType>;
@@ -68,48 +68,48 @@ export type EventStreamEvent<StateType, UpdateType, CustomType> =
 
 interface StreamManagerEventCallbacks<
   StateType extends Record<string, unknown>,
-  Bag extends BagTemplate = BagTemplate
+  Bag extends BagTemplate = BagTemplate,
 > {
   onUpdateEvent?: (
     data: UpdatesStreamEvent<GetUpdateType<Bag, StateType>>["data"],
     options: {
       namespace: string[] | undefined;
       mutate: (
-        update: Partial<StateType> | ((prev: StateType) => Partial<StateType>)
+        update: Partial<StateType> | ((prev: StateType) => Partial<StateType>),
       ) => void;
-    }
+    },
   ) => void;
   onCustomEvent?: (
     data: GetCustomEventType<Bag>,
     options: {
       namespace: string[] | undefined;
       mutate: (
-        update: Partial<StateType> | ((prev: StateType) => Partial<StateType>)
+        update: Partial<StateType> | ((prev: StateType) => Partial<StateType>),
       ) => void;
-    }
+    },
   ) => void;
   onMetadataEvent?: (data: MetadataStreamEvent["data"]) => void;
   onLangChainEvent?: (data: EventsStreamEvent["data"]) => void;
   onDebugEvent?: (
     data: DebugStreamEvent["data"],
-    options: { namespace: string[] | undefined }
+    options: { namespace: string[] | undefined },
   ) => void;
   onCheckpointEvent?: (
     data: CheckpointsStreamEvent<StateType>["data"],
-    options: { namespace: string[] | undefined }
+    options: { namespace: string[] | undefined },
   ) => void;
   onTaskEvent?: (
     data: TasksStreamEvent<StateType, GetUpdateType<Bag, StateType>>["data"],
-    options: { namespace: string[] | undefined }
+    options: { namespace: string[] | undefined },
   ) => void;
   onToolEvent?: (
     data: ToolsStreamEvent["data"],
     options: {
       namespace: string[] | undefined;
       mutate: (
-        update: Partial<StateType> | ((prev: StateType) => Partial<StateType>)
+        update: Partial<StateType> | ((prev: StateType) => Partial<StateType>),
       ) => void;
-    }
+    },
   ) => void;
 }
 
@@ -182,7 +182,7 @@ export interface StreamManagerOptions {
 
 export class StreamManager<
   StateType extends Record<string, unknown>,
-  Bag extends BagTemplate = BagTemplate
+  Bag extends BagTemplate = BagTemplate,
 > {
   private abortRef = new AbortController();
 
@@ -287,7 +287,7 @@ export class StreamManager<
    */
   reconstructSubagents(
     messages: Message[],
-    options?: { skipIfPopulated?: boolean }
+    options?: { skipIfPopulated?: boolean },
   ): void {
     this.subagentManager.reconstructFromMessages(messages, options);
   }
@@ -350,7 +350,7 @@ export class StreamManager<
     values:
       | (StateType | null)
       | ((prev: StateType | null, kind: "stream" | "stop") => StateType | null),
-    kind: "stream" | "stop" = "stream"
+    kind: "stream" | "stop" = "stream",
   ) => {
     if (typeof values === "function") {
       const [prevValues, prevKind] = this.state.values ?? [null, "stream"];
@@ -364,7 +364,7 @@ export class StreamManager<
 
   private getMutateFn = (kind: "stream" | "stop", historyValues: StateType) => {
     return (
-      update: Partial<StateType> | ((prev: StateType) => Partial<StateType>)
+      update: Partial<StateType> | ((prev: StateType) => Partial<StateType>),
     ) => {
       const stateValues = (this.state.values ?? [null, "stream"])[0];
       const prev = {
@@ -381,7 +381,7 @@ export class StreamManager<
       StateType,
       GetUpdateType<Bag, StateType>,
       GetCustomEventType<Bag>
-    >
+    >,
   >(
     expected: T,
     actual: EventStreamEvent<
@@ -393,7 +393,7 @@ export class StreamManager<
       StateType,
       GetUpdateType<Bag, StateType>,
       GetCustomEventType<Bag>
-    >["data"]
+    >["data"],
   ): _data is EventStreamMap<
     StateType,
     GetUpdateType<Bag, StateType>,
@@ -404,7 +404,7 @@ export class StreamManager<
 
   protected enqueue = async (
     action: (
-      signal: AbortSignal
+      signal: AbortSignal,
     ) => Promise<
       AsyncGenerator<
         EventStreamEvent<
@@ -433,7 +433,7 @@ export class StreamManager<
       onError: (error: unknown) => void | Promise<void>;
 
       onFinish?: () => void;
-    }
+    },
   ) => {
     try {
       this.queueSize = Math.max(0, this.queueSize - 1);
@@ -469,7 +469,7 @@ export class StreamManager<
             if (namespaceId && this.filterSubagentMessages) {
               this.subagentManager.markRunningFromNamespace(
                 namespaceId,
-                namespace
+                namespace,
               );
             }
           }
@@ -504,7 +504,7 @@ export class StreamManager<
                           name: string;
                           args: Record<string, unknown> | string;
                         }>,
-                        msgObj.id as string | undefined
+                        msgObj.id as string | undefined,
                       );
                     }
 
@@ -525,7 +525,7 @@ export class StreamManager<
                       this.subagentManager.processToolMessage(
                         msgObj.tool_call_id,
                         content,
-                        status
+                        status,
                       );
                     }
                   }
@@ -573,7 +573,7 @@ export class StreamManager<
                 ) {
                   this.subagentManager.matchSubgraphToSubagent(
                     namespaceId,
-                    firstMsg.content
+                    firstMsg.content,
                   );
                 }
               }
@@ -581,7 +581,7 @@ export class StreamManager<
               // Update the subagent's values with the full state
               this.subagentManager.updateSubagentValues(
                 namespaceId,
-                valuesData
+                valuesData,
               );
             }
           } else if (
@@ -591,7 +591,7 @@ export class StreamManager<
           ) {
             const interruptData = data as Partial<StateType>;
             this.setStreamValues(
-              (prev) => ({ ...prev, ...interruptData } as StateType)
+              (prev) => ({ ...prev, ...interruptData }) as StateType,
             );
           } else {
             this.setStreamValues(data as StateType);
@@ -619,7 +619,7 @@ export class StreamManager<
             this.subagentManager.addMessageToSubagent(
               toolCallId,
               serialized,
-              metadata
+              metadata,
             );
             continue;
           }
@@ -627,7 +627,7 @@ export class StreamManager<
           const messageId = this.messages.add(serialized, metadata);
           if (!messageId) {
             console.warn(
-              "Failed to add message to manager, no message ID found"
+              "Failed to add message to manager, no message ID found",
             );
             continue;
           }
@@ -665,7 +665,7 @@ export class StreamManager<
               ) {
                 this.subagentManager.registerFromToolCalls(
                   msgDict.tool_calls,
-                  msgDict.id as string | undefined
+                  msgDict.id as string | undefined,
                 );
               }
 
@@ -724,7 +724,7 @@ export class StreamManager<
 
   start = async (
     action: (
-      signal: AbortSignal
+      signal: AbortSignal,
     ) => Promise<
       AsyncGenerator<
         EventStreamEvent<
@@ -761,7 +761,7 @@ export class StreamManager<
        * the queue so the new run request can proceed immediately.
        */
       abortPrevious?: boolean;
-    }
+    },
   ): Promise<void> => {
     if (startOptions?.abortPrevious) {
       this.abortRef.abort();
@@ -777,10 +777,12 @@ export class StreamManager<
     options: {
       onStop?: (options: {
         mutate: (
-          update: Partial<StateType> | ((prev: StateType) => Partial<StateType>)
+          update:
+            | Partial<StateType>
+            | ((prev: StateType) => Partial<StateType>),
         ) => void;
       }) => void;
-    }
+    },
   ): Promise<void> => {
     this.abortRef.abort();
     this.abortRef = new AbortController();

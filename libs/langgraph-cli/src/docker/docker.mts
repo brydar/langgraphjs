@@ -25,7 +25,7 @@ async function exists(path: string) {
 
 export async function assembleLocalDeps(
   configPath: string,
-  config: Config
+  config: Config,
 ): Promise<LocalDeps> {
   const reserved = new Set([
     "src",
@@ -46,7 +46,7 @@ export async function assembleLocalDeps(
   function checkReserved(name: string, ref: string) {
     if (reserved.has(name)) {
       throw new Error(
-        `Package name '${name}' used in local dep '${ref}' is reserved. Rename the directory.`
+        `Package name '${name}' used in local dep '${ref}' is reserved. Rename the directory.`,
       );
     }
     reserved.add(name);
@@ -71,7 +71,7 @@ export async function assembleLocalDeps(
       throw new Error(`Local dependency must be a directory: ${resolved}`);
     } else if (!resolved.startsWith(path.dirname(configPath))) {
       throw new Error(
-        `Local dependency must be a subdirectory of the config file: ${resolved}`
+        `Local dependency must be a subdirectory of the config file: ${resolved}`,
       );
     }
 
@@ -99,14 +99,14 @@ export async function assembleLocalDeps(
         if (path.basename(resolved).includes("-")) {
           throw new Error(
             `Package name '${path.basename(
-              resolved
-            )}' contains a hyphen. Rename the directory to use it as flat-layout package.`
+              resolved,
+            )}' contains a hyphen. Rename the directory to use it as flat-layout package.`,
           );
         }
 
         checkReserved(path.basename(resolved), localDep);
         containerPath = `/deps/__outer_${path.basename(
-          resolved
+          resolved,
         )}/${path.basename(resolved)}`;
       } else {
         containerPath = `/deps/__outer_${path.basename(resolved)}/src`;
@@ -177,7 +177,7 @@ export async function assembleLocalDeps(
 async function updateGraphPaths(
   configPath: string,
   config: Config,
-  localDeps: LocalDeps
+  localDeps: LocalDeps,
 ) {
   for (const [graphId, graphDef] of Object.entries(config.graphs)) {
     const importStr = typeof graphDef === "string" ? graphDef : graphDef.path;
@@ -186,7 +186,7 @@ async function updateGraphPaths(
     let [moduleStr, attrStr] = importStr.split(":", 2);
     if (!moduleStr || !attrStr) {
       throw new Error(
-        `Import string "${importStr}" must be in format "<module>:<attribute>".`
+        `Import string "${importStr}" must be in format "<module>:<attribute>".`,
       );
     }
 
@@ -204,7 +204,7 @@ async function updateGraphPaths(
                 .join(
                   "/deps",
                   path.basename(realPath),
-                  path.relative(realPath, resolved)
+                  path.relative(realPath, resolved),
                 )
                 .split(path.sep)
                 .join("/");
@@ -213,7 +213,7 @@ async function updateGraphPaths(
           }
 
           for (const [fauxPkg, [_, destPath]] of Object.entries(
-            localDeps.fauxPkgs
+            localDeps.fauxPkgs,
           )) {
             if (resolved.startsWith(fauxPkg)) {
               moduleStr = path
@@ -224,7 +224,7 @@ async function updateGraphPaths(
             }
 
             throw new Error(
-              `Module '${importStr}' not found in 'dependencies' list. Add its containing package to 'dependencies' list.`
+              `Module '${importStr}' not found in 'dependencies' list. Add its containing package to 'dependencies' list.`,
             );
           }
         }
@@ -275,7 +275,7 @@ export async function configToDocker(
     watch: boolean;
     dockerCommand?: string;
     onWorkingDir?: (workingDir: string | undefined) => void;
-  }
+  },
 ) {
   // figure out the package manager used here
   const testFile = async (file: string) =>
@@ -307,18 +307,18 @@ export async function configToDocker(
     : undefined;
 
   const pipReqs = localDeps.pipReqs.map(
-    ([reqpath, destpath]) => `ADD ${reqpath} ${destpath}`
+    ([reqpath, destpath]) => `ADD ${reqpath} ${destpath}`,
   );
   if (pipReqs.length) {
     pipReqs.push(
       `RUN ${pipInstall} ${localDeps.pipReqs
         .map(([, r]) => `-r ${r}`)
-        .join(" ")}`
+        .join(" ")}`,
     );
   }
 
   const localPkg = Object.entries(localDeps.realPkgs).map(
-    ([fullpath, relpath]) => `ADD ${relpath} /deps/${path.basename(fullpath)}`
+    ([fullpath, relpath]) => `ADD ${relpath} /deps/${path.basename(fullpath)}`,
   );
 
   const fauxPkgs = Object.entries(localDeps.fauxPkgs).flatMap(
@@ -336,7 +336,7 @@ export async function configToDocker(
                 }" >> /deps/__outer_${path.basename(fullpath)}/pyproject.toml; \
             done
       `,
-    ]
+    ],
   );
 
   if (
@@ -396,7 +396,7 @@ export async function configToDocker(
     lines.push(
       `CMD exec uvicorn langgraph_api.server:app --log-config /api/logging.json --no-access-log --host 0.0.0.0 --port 8000 --reload --reload-dir ${
         localDeps.workingDir || localDeps.reloadDir
-      }`
+      }`,
     );
   }
 
@@ -406,7 +406,7 @@ export async function configToDocker(
 export async function configToWatch(
   configPath: string,
   config: Config,
-  localDeps: LocalDeps
+  localDeps: LocalDeps,
 ) {
   const projectDir = path.dirname(configPath);
   const watch: Array<{
@@ -464,7 +464,7 @@ export async function configToCompose(
   options?: {
     watch: boolean;
     extendEnv?: Record<string, string>;
-  }
+  },
 ): Promise<{
   apiDef: Record<string, unknown>;
   rewrite: { source: string; target: string } | undefined;

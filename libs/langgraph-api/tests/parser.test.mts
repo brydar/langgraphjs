@@ -51,7 +51,7 @@ describe("getRuntimeGraphSchema", () => {
             jsonSchemaExtra: {
               langgraph_type: "messages",
             },
-          }
+          },
         ),
         count: z.number().default(0),
       });
@@ -160,7 +160,7 @@ describe("getRuntimeGraphSchema", () => {
               langgraph_type: "messages",
               source: "stateschema",
             },
-          }
+          },
         ),
       });
 
@@ -249,7 +249,7 @@ test.concurrent("graph factories", { timeout: 30_000 }, () => {
         },
       ],
       exportSymbol: "graph",
-    }))
+    })),
   );
 
   for (const schema of schemas) {
@@ -309,7 +309,7 @@ describe.concurrent("subgraphs", { timeout: 30_000 }, () => {
             `,
           },
         ],
-      }))
+      })),
     );
 
     for (const schemas of schemasList) {
@@ -446,7 +446,7 @@ describe.concurrent("subgraphs", { timeout: 30_000 }, () => {
         "parent",
         "parent|parent-two",
         "parent|parent-two|child-two",
-      ])
+      ]),
     );
 
     expect(schema["parent"].state).toMatchObject({
@@ -572,10 +572,10 @@ describe.concurrent("subgraphs", { timeout: 30_000 }, () => {
             exportSymbol: "parent",
           },
         ],
-        { strict: true }
+        { strict: true },
       );
     }).toThrowError(
-      `Multiple unique subgraph invocations found for "parent|parent_one"`
+      `Multiple unique subgraph invocations found for "parent|parent_one"`,
     );
   });
 
@@ -637,7 +637,7 @@ describe.concurrent("subgraphs", { timeout: 30_000 }, () => {
 
     const schema = schemas[0];
     expect(Object.keys(schema)).toEqual(
-      expect.arrayContaining(["graph", "graph|child"])
+      expect.arrayContaining(["graph", "graph|child"]),
     );
 
     expect(schema["graph|child"].input).toMatchObject({
@@ -769,7 +769,7 @@ describe.concurrent("subgraphs", { timeout: 30_000 }, () => {
 
     const schema = schemas[0];
     expect(Object.keys(schema)).toEqual(
-      expect.arrayContaining(["graph", "graph|child"])
+      expect.arrayContaining(["graph", "graph|child"]),
     );
 
     expect(schema["graph|child"].input).toMatchObject({
@@ -1041,7 +1041,7 @@ test.concurrent("weather", { timeout: 30_000 }, () => {
 
   const schema = schemas[0];
   expect(Object.keys(schema)).toEqual(
-    expect.arrayContaining(["graph", "graph|weather_graph"])
+    expect.arrayContaining(["graph", "graph|weather_graph"]),
   );
 });
 
@@ -1106,7 +1106,7 @@ test.concurrent("nested", { timeout: 30_000 }, () => {
 
   const schema = schemas[0];
   expect(Object.keys(schema)).toEqual(
-    expect.arrayContaining(["graph", "graph|gp_two", "graph|gp_two|p_two"])
+    expect.arrayContaining(["graph", "graph|gp_two", "graph|gp_two|p_two"]),
   );
 });
 
@@ -1177,7 +1177,7 @@ test.concurrent(
         },
       },
     ]);
-  }
+  },
 );
 
 test.concurrent("`strictFunctionTypes: false`", { timeout: 30_000 }, () => {
@@ -1205,7 +1205,7 @@ test.concurrent("`strictFunctionTypes: false`", { timeout: 30_000 }, () => {
         exportSymbol: "graph",
       },
     ],
-    { tsConfigOptions: { strictFunctionTypes: false } }
+    { tsConfigOptions: { strictFunctionTypes: false } },
   );
 
   const schema = schemas[0];

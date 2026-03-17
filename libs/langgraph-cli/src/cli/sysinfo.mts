@@ -44,7 +44,7 @@ builder
 
     const packages = gatherMatch(
       output.stdout,
-      /(@langchain\/[^\s@]+|langsmith|langchain|zod|zod-to-json-schema)/g
+      /(@langchain\/[^\s@]+|langsmith|langchain|zod|zod-to-json-schema)/g,
     );
 
     async function getPackageInfo(packageName: string) {
@@ -80,7 +80,7 @@ builder
         "->",
         gatherMatch(info, targetRegex)
           .map((i) => i.slice(pkg.length).trim())
-          .join(", ")
+          .join(", "),
       );
     }
   });

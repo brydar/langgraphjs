@@ -51,7 +51,7 @@ const getWeather = tool(
     schema: z.object({
       location: z.string().describe("The city to get weather for"),
     }),
-  }
+  },
 );
 
 const searchWeb = tool(
@@ -65,7 +65,7 @@ const searchWeb = tool(
       query: z.string().describe("The search query"),
       maxResults: z.number().default(10).describe("Maximum results to return"),
     }),
-  }
+  },
 );
 
 const sendEmail = tool(
@@ -80,7 +80,7 @@ const sendEmail = tool(
       subject: z.string().describe("Email subject"),
       body: z.string().describe("Email body"),
     }),
-  }
+  },
 );
 
 // ============================================================================
@@ -109,7 +109,7 @@ const filesMiddleware = createMiddleware({
       z.object({
         path: z.string(),
         content: z.string(),
-      })
+      }),
     ),
   }),
 });
@@ -241,7 +241,7 @@ describe("InferMiddlewareStatesFromArray", () => {
   test("merges states from multiple middlewares", () => {
     type Middlewares = readonly [
       typeof todoListMiddleware,
-      typeof counterMiddleware
+      typeof counterMiddleware,
     ];
     type Result = InferMiddlewareStatesFromArray<Middlewares>;
 
@@ -254,7 +254,6 @@ describe("InferMiddlewareStatesFromArray", () => {
   test("returns empty object for empty middleware array", () => {
     type Middlewares = readonly [];
     type Result = InferMiddlewareStatesFromArray<Middlewares>;
-    // eslint-disable-next-line @typescript-eslint/ban-types
     expectTypeOf<Result>().toEqualTypeOf<{}>();
   });
 });
@@ -875,19 +874,19 @@ describe("@langchain/langgraph-sdk/react backward compatibility", () => {
 
     expectTypeOf(stream.submit).toBeCallableWith(
       { messages: [{ type: "human", content: "Hello" }] },
-      undefined
+      undefined,
     );
 
     expectTypeOf(stream.submit).toBeCallableWith(
       // @ts-expect-error - ensuring we remain backward compatible
       { messages: [new HumanMessage("Hello")] },
-      undefined
+      undefined,
     );
 
     expectTypeOf(stream.submit).toBeCallableWith(
       // @ts-expect-error - ensuring we remain backward compatible
       { messages: new HumanMessage("Hello") },
-      undefined
+      undefined,
     );
   });
 });

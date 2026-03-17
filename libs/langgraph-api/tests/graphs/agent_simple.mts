@@ -32,7 +32,7 @@ const AgentState = Annotation.Root({
 
 async function callModel(
   state: typeof AgentState.State,
-  config: LangGraphRunnableConfig
+  config: LangGraphRunnableConfig,
 ): Promise<typeof AgentState.Update> {
   let userId: string | undefined;
 
@@ -64,11 +64,11 @@ async function callModel(
 }
 
 async function callTool(
-  message: BaseMessage
+  message: BaseMessage,
 ): Promise<typeof AgentState.Update> {
   const response = new ToolMessage(
     `tool_call__${message.content}`,
-    "tool_call_id"
+    "tool_call_id",
   );
   return { messages: [response] };
 }

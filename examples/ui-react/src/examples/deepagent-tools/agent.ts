@@ -49,7 +49,7 @@ export const searchWeb = tool(
         .default(3)
         .describe("Maximum number of results to return"),
     }),
-  }
+  },
 );
 
 export const analyzeSentiment = tool(
@@ -76,7 +76,7 @@ export const analyzeSentiment = tool(
     schema: z.object({
       text: z.string().describe("The text to analyze"),
     }),
-  }
+  },
 );
 
 export const extractKeywords = tool(
@@ -94,7 +94,7 @@ export const extractKeywords = tool(
       status: "success",
       keywords,
       relevanceScores: keywords.map(() =>
-        (0.7 + Math.random() * 0.3).toFixed(2)
+        (0.7 + Math.random() * 0.3).toFixed(2),
       ),
     });
   },
@@ -110,7 +110,7 @@ export const extractKeywords = tool(
         .default(5)
         .describe("Number of keywords to extract"),
     }),
-  }
+  },
 );
 
 // ============================================================================
@@ -143,7 +143,7 @@ export const queryDatabase = tool(
       table: z.string().describe("The table name to query"),
       filters: z.string().optional().describe("Optional filter conditions"),
     }),
-  }
+  },
 );
 
 export const aggregateData = tool(
@@ -175,7 +175,7 @@ export const aggregateData = tool(
         .enum(["sum", "average", "count", "max", "min"])
         .describe("The aggregation operation to perform"),
     }),
-  }
+  },
 );
 
 export const generateChart = tool(
@@ -199,7 +199,7 @@ export const generateChart = tool(
         .describe("The type of chart to generate"),
       title: z.string().describe("The chart title"),
     }),
-  }
+  },
 );
 
 // ============================================================================
@@ -234,7 +234,7 @@ export const draftSection = tool(
         .default(200)
         .describe("Target word count"),
     }),
-  }
+  },
 );
 
 export const editContent = tool(
@@ -256,7 +256,7 @@ export const editContent = tool(
       content: z.string().describe("The content to edit"),
       instructions: z.string().describe("Editing instructions"),
     }),
-  }
+  },
 );
 
 export const checkGrammar = tool(
@@ -279,7 +279,7 @@ export const checkGrammar = tool(
     schema: z.object({
       text: z.string().describe("The text to check"),
     }),
-  }
+  },
 );
 
 // ============================================================================

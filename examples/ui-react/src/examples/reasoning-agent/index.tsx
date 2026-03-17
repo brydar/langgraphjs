@@ -30,7 +30,7 @@ export function ReasoningAgent() {
     (content: string) => {
       stream.submit({ messages: [{ content, type: "human" }] });
     },
-    [stream]
+    [stream],
   );
 
   return (

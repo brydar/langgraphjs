@@ -60,7 +60,7 @@ const analyzeDataTool = tool(
        * Simulate processing time
        */
       await new Promise((resolve) =>
-        setTimeout(resolve, 500 + Math.random() * 500)
+        setTimeout(resolve, 500 + Math.random() * 500),
       );
     }
 
@@ -97,7 +97,7 @@ const analyzeDataTool = tool(
     description:
       "Analyze data from various sources. Streams progress updates during analysis.",
     schema: analyzeDataSchema,
-  }
+  },
 );
 
 const processFileSchema = z.object({
@@ -151,7 +151,7 @@ const processFileTool = tool(
     name: "process_file",
     description: "Process a file with various operations",
     schema: processFileSchema,
-  }
+  },
 );
 
 /**

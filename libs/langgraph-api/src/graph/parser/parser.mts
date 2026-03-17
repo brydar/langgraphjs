@@ -24,7 +24,7 @@ const OVERRIDE_RESOLVE = [
 
 const INFER_TEMPLATE_PATH = path.resolve(
   __dirname,
-  "./schema/types.template.mts"
+  "./schema/types.template.mts",
 );
 
 export class SubgraphExtractor {
@@ -42,7 +42,7 @@ export class SubgraphExtractor {
     program: ts.Program,
     sourceFile: ts.SourceFile,
     inferFile: ts.SourceFile,
-    options?: { strict?: boolean }
+    options?: { strict?: boolean },
   ) {
     this.program = program;
     this.sourceFile = sourceFile;
@@ -79,7 +79,7 @@ export class SubgraphExtractor {
 
   private find = (
     root: ts.Node,
-    predicate: (node: ts.Node) => boolean
+    predicate: (node: ts.Node) => boolean,
   ): ts.Node | undefined => {
     let result: ts.Node | undefined = undefined;
 
@@ -98,7 +98,7 @@ export class SubgraphExtractor {
 
   protected findSubgraphs = (
     node: ts.Node,
-    namespace: string[] = []
+    namespace: string[] = [],
   ): {
     node: string;
     namespace: string[];
@@ -110,7 +110,7 @@ export class SubgraphExtractor {
         namespace: string[];
         subgraph: { name: string; node: ts.Node };
       }[],
-      node: ts.Node
+      node: ts.Node,
     ) => {
       if (ts.isCallExpression(node)) {
         const firstChild = node.getChildAt(0);
@@ -142,7 +142,7 @@ export class SubgraphExtractor {
               variables = this.reduceChildren(
                 callArg,
                 this.findSubgraphIdentifiers,
-                []
+                [],
               );
             } else if (ts.isIdentifier(callArg)) {
               variables = this.findSubgraphIdentifiers([], callArg);
@@ -180,13 +180,13 @@ export class SubgraphExtractor {
       type InternalFlowNode = ts.Node & { flowNode?: { node: ts.Node } };
       const candidate = this.find(
         node,
-        (node: any) => node && "flowNode" in node && node.flowNode
+        (node: any) => node && "flowNode" in node && node.flowNode,
       ) as InternalFlowNode | undefined;
 
       if (
         candidate?.flowNode &&
         this.isGraphOrPregelType(
-          this.checker.getTypeAtLocation(candidate.flowNode.node)
+          this.checker.getTypeAtLocation(candidate.flowNode.node),
         )
       ) {
         subgraphs = this.findSubgraphs(candidate.flowNode.node, namespace);
@@ -198,7 +198,7 @@ export class SubgraphExtractor {
       return [
         ...subgraphs,
         ...subgraphs.map(({ subgraph, node }) =>
-          this.findSubgraphs(subgraph.node, [...namespace, node])
+          this.findSubgraphs(subgraph.node, [...namespace, node]),
         ),
       ].flat();
     }
@@ -213,7 +213,7 @@ export class SubgraphExtractor {
     const targetExport = exports.find((item) => item.name === name);
     if (!targetExport) throw new Error(`Failed to find export "${name}"`);
     const varDecls = (targetExport.declarations ?? []).filter(
-      ts.isVariableDeclaration
+      ts.isVariableDeclaration,
     );
 
     return varDecls.flatMap((varDecl) => {
@@ -225,7 +225,7 @@ export class SubgraphExtractor {
   public getAugmentedSourceFile = (
     sourcePath: string,
     name: string,
-    options: { allowImportingTsExtensions: boolean }
+    options: { allowImportingTsExtensions: boolean },
   ): {
     inferFile: { fileName: string; contents: string };
     sourceFile: { fileName: string; contents: string };
@@ -261,7 +261,7 @@ export class SubgraphExtractor {
 
       typeExports.push({
         typeName: sanitize(
-          `__langgraph__${namespace.join("_")}_${node}_${suffix}`
+          `__langgraph__${namespace.join("_")}_${node}_${suffix}`,
         ),
         valueName: subgraph.name,
         graphName: [...namespace, node].join("|"),
@@ -277,7 +277,7 @@ export class SubgraphExtractor {
     const sourceContents = [
       this.getText(this.sourceFile),
       typeExports.map(
-        (type) => `export type ${type.typeName} = typeof ${type.valueName}`
+        (type) => `export type ${type.typeName} = typeof ${type.valueName}`,
       ),
     ];
 
@@ -289,7 +289,7 @@ export class SubgraphExtractor {
     const inferContents = [
       typeExports.map(
         (type) =>
-          `import type { ${type.typeName} } from "./${sourceFileImportPath}"`
+          `import type { ${type.typeName} } from "./${sourceFileImportPath}"`,
       ),
       this.inferFile.getText(this.inferFile),
       typeExports.map(
@@ -302,7 +302,7 @@ export class SubgraphExtractor {
           export type ${type.typeName}__input = Inspect<FilterAny<${type.typeName}__builder["input"]>>;
           export type ${type.typeName}__output = Inspect<FilterAny<${type.typeName}__builder["output"]>>;
           export type ${type.typeName}__config = Inspect<FilterAny<${type.typeName}__builder["config"]>>;
-        `
+        `,
       ),
     ];
 
@@ -321,7 +321,7 @@ export class SubgraphExtractor {
 
   protected findSubgraphIdentifiers = (
     acc: { node: ts.Node; name: string }[],
-    node: ts.Node
+    node: ts.Node,
   ) => {
     if (ts.isIdentifier(node)) {
       const smb = this.checker.getSymbolAtLocation(node);
@@ -366,7 +366,7 @@ export class SubgraphExtractor {
   protected reduceChildren<Acc>(
     node: ts.Node,
     fn: (acc: Acc, node: ts.Node) => Acc,
-    initial: Acc
+    initial: Acc,
   ): Acc {
     let acc = initial;
     function it(node: ts.Node) {
@@ -390,7 +390,7 @@ export class SubgraphExtractor {
           }[];
       exportSymbol: string;
     }[],
-    options?: { strict?: boolean; tsConfigOptions?: Record<string, unknown> }
+    options?: { strict?: boolean; tsConfigOptions?: Record<string, unknown> },
   ): Record<string, GraphSchema>[] {
     if (!target.length) throw new Error("No graphs found");
 
@@ -408,7 +408,7 @@ export class SubgraphExtractor {
     }
 
     const isTestTarget = (
-      check: typeof target
+      check: typeof target,
     ): check is { sourceFile: string; exportSymbol: string }[] => {
       return check.every((x) => typeof x.sourceFile === "string");
     };
@@ -444,7 +444,7 @@ export class SubgraphExtractor {
     const tsconfigPath = ts.findConfigFile(
       projectDirname,
       ts.sys.fileExists,
-      "tsconfig.json"
+      "tsconfig.json",
     );
 
     // Read tsconfig.json file
@@ -453,7 +453,7 @@ export class SubgraphExtractor {
       const parsedTsconfig = ts.parseJsonConfigFileContent(
         tsconfigFile.config,
         ts.sys,
-        path.dirname(tsconfigPath)
+        path.dirname(tsconfigPath),
       );
 
       compilerOptions = {
@@ -475,7 +475,7 @@ export class SubgraphExtractor {
           []) {
           fsMap.set(
             vfsPath(path.resolve(projectDirname, sourcePath)),
-            contents
+            contents,
           );
 
           if (main) {
@@ -490,13 +490,13 @@ export class SubgraphExtractor {
 
     const moduleCache = ts.createModuleResolutionCache(
       projectDirname,
-      (x) => x
+      (x) => x,
     );
     host.resolveModuleNameLiterals = (
       entries,
       containingFile,
       redirectedReference,
-      options
+      options,
     ) =>
       entries.flatMap((entry) => {
         const specifier = entry.text;
@@ -510,7 +510,7 @@ export class SubgraphExtractor {
             // Doesn't matter if the file exists, only used to nudge `ts.resolveModuleName`
             targetFile = path.resolve(
               projectDirname,
-              "__langgraph__resolve.mts"
+              "__langgraph__resolve.mts",
             );
           }
         }
@@ -522,7 +522,7 @@ export class SubgraphExtractor {
             options,
             host,
             moduleCache,
-            redirectedReference
+            redirectedReference,
           ),
         ];
       });
@@ -547,7 +547,7 @@ export class SubgraphExtractor {
         research,
         research.getSourceFile(targetPath.sourceFile)!,
         research.getSourceFile(INFER_TEMPLATE_PATH)!,
-        options
+        options,
       );
 
       const graphDirname = path.dirname(targetPath.sourceFile);
@@ -558,13 +558,13 @@ export class SubgraphExtractor {
           {
             allowImportingTsExtensions:
               compilerOptions.allowImportingTsExtensions ?? false,
-          }
+          },
         );
 
       for (const { fileName, contents } of [sourceFile, inferFile]) {
         system.writeFile(
           vfsPath(path.resolve(graphDirname, fileName)),
-          contents
+          contents,
         );
       }
 
@@ -591,7 +591,7 @@ export class SubgraphExtractor {
         const fileName = diagnostic.file.fileName;
         const { line, character } = ts.getLineAndCharacterOfPosition(
           diagnostic.file,
-          diagnostic.start!
+          diagnostic.start!,
         );
         const fileLoc = `(${line + 1},${character + 1})`;
         message = `${fileName} ${fileLoc}: ${message}`;
@@ -608,7 +608,7 @@ export class SubgraphExtractor {
       } catch (e) {
         console.warn(
           `Failed to obtain symbol "${symbol}":`,
-          (e as Error)?.message
+          (e as Error)?.message,
         );
       }
 
@@ -650,7 +650,7 @@ export class SubgraphExtractor {
         JSON.stringify(schema, (_, value) => {
           if (typeof value === "string" && refMap[value]) return refMap[value];
           return value;
-        })
+        }),
       );
     };
 
@@ -664,8 +664,8 @@ export class SubgraphExtractor {
             output: trySymbol(`${typeName}__output`),
             config: trySymbol(`${typeName}__config`),
           },
-        ])
-      )
+        ]),
+      ),
     );
   }
 }

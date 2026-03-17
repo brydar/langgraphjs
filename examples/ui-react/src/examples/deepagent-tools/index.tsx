@@ -29,7 +29,7 @@ function hasContent(message: Message): boolean {
   }
   if (Array.isArray(message.content)) {
     return message.content.some(
-      (c) => c.type === "text" && c.text.trim().length > 0
+      (c) => c.type === "text" && c.text.trim().length > 0,
     );
   }
   return false;
@@ -86,7 +86,7 @@ export function DeepAgentToolsDemo() {
   const allSubagentsDone =
     hasSubagents &&
     [...stream.subagents.values()].every(
-      (s) => s.status === "complete" || s.status === "error"
+      (s) => s.status === "complete" || s.status === "error",
     );
 
   // Filter messages: only show human messages and AI messages with actual content
@@ -113,10 +113,10 @@ export function DeepAgentToolsDemo() {
           config: {
             recursion_limit: 100,
           },
-        }
+        },
       );
     },
-    [stream]
+    [stream],
   );
 
   // Build a map of human message ID -> subagents for that turn.

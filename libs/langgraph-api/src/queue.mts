@@ -27,7 +27,7 @@ const worker = async (
   ops: Ops,
   run: Run,
   attempt: number,
-  signal: AbortSignal
+  signal: AbortSignal,
 ) => {
   const startedAt = new Date();
   let endedAt: Date | undefined = undefined;

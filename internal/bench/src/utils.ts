@@ -21,20 +21,20 @@ export type AnyStateGraph = CompiledStateGraph<any, any, any, any, any, any>;
 // Helper functions
 export const runGraph = async (
   graph: AnyStateGraph,
-  input: Record<string, unknown>
+  input: Record<string, unknown>,
 ) => {
   const results = await gatherIterator(
     graph.stream(input, {
       configurable: { thread_id: randomUUID() },
       recursionLimit: 1000000000,
-    })
+    }),
   );
   return results.length;
 };
 
 export const runFirstEventLatency = async (
   graph: AnyStateGraph,
-  input: Record<string, unknown>
+  input: Record<string, unknown>,
 ) => {
   const iterator = await graph.stream(input, {
     configurable: { thread_id: randomUUID() },
@@ -66,7 +66,7 @@ export class FakeToolCallingChatModel extends BaseChatModel {
       thrownErrorString?: string;
       toolStyle?: "openai" | "anthropic" | "bedrock" | "google";
       structuredResponse?: Record<string, unknown>;
-    } & BaseChatModelParams
+    } & BaseChatModelParams,
   ) {
     super(fields);
     this.sleep = fields.sleep ?? this.sleep;
@@ -85,7 +85,7 @@ export class FakeToolCallingChatModel extends BaseChatModel {
   async _generate(
     messages: BaseMessage[],
     _options: this["ParsedCallOptions"],
-    runManager?: CallbackManagerForLLMRun
+    runManager?: CallbackManagerForLLMRun,
   ): Promise<ChatResult> {
     if (this.thrownErrorString) {
       throw new Error(this.thrownErrorString);
@@ -151,7 +151,7 @@ export class FakeToolCallingChatModel extends BaseChatModel {
 
   withStructuredOutput<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    RunOutput extends Record<string, any> = Record<string, any>
+    RunOutput extends Record<string, any> = Record<string, any>,
   >(_: unknown) {
     if (!this.structuredResponse) {
       throw new Error("No structured response provided");
@@ -176,7 +176,7 @@ export async function gatherIterator<T>(
     | AsyncIterable<T>
     | Promise<AsyncIterable<T>>
     | Iterable<T>
-    | Promise<Iterable<T>>
+    | Promise<Iterable<T>>,
 ): Promise<Array<T>> {
   const out: T[] = [];
   for await (const item of await i) {

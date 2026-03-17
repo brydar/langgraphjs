@@ -35,7 +35,7 @@ export interface ThreadSaver {
 
   set: (
     id: string,
-    options: { kind: "put" | "patch"; metadata?: Metadata }
+    options: { kind: "put" | "patch"; metadata?: Metadata },
   ) => Promise<Thread>;
   delete: (id: string) => Promise<void>;
 
@@ -53,7 +53,7 @@ type RunStatus = "pending" | "running" | "success" | "error" | "interrupted";
 function createStubRun(
   threadId: string,
   payload: z.infer<typeof schemas.RunCreate>,
-  overrides?: { status?: RunStatus; multitask_strategy?: MultitaskStrategy }
+  overrides?: { status?: RunStatus; multitask_strategy?: MultitaskStrategy },
 ): Run {
   const now = new Date();
   const runId = uuidv7();
@@ -61,8 +61,8 @@ function createStubRun(
   let streamMode = Array.isArray(payload.stream_mode)
     ? payload.stream_mode
     : payload.stream_mode
-    ? [payload.stream_mode]
-    : undefined;
+      ? [payload.stream_mode]
+      : undefined;
 
   if (streamMode == null || streamMode.length === 0) streamMode = ["values"];
   const config = Object.assign(
@@ -85,7 +85,7 @@ function createStubRun(
           : null),
       },
     },
-    { metadata: payload.metadata ?? {} }
+    { metadata: payload.metadata ?? {} },
   );
 
   return {
@@ -145,7 +145,7 @@ export function createEmbedServer(options: {
   async function waitForRunReady(
     threadId: string,
     runId: string,
-    signal?: AbortSignal
+    signal?: AbortSignal,
   ): Promise<Run | null> {
     const state = getThreadState(threadId);
     const run = state.pendingRuns.find((r) => r.run_id === runId);
@@ -183,7 +183,7 @@ export function createEmbedServer(options: {
       await options.threads.set(threadId, {
         kind: "put",
         metadata: payload.metadata,
-      })
+      }),
     );
   });
 
@@ -194,7 +194,7 @@ export function createEmbedServer(options: {
       // Get Thread
       const { thread_id } = c.req.valid("param");
       return jsonExtra(c, await options.threads.get(thread_id));
-    }
+    },
   );
 
   api.patch(
@@ -210,9 +210,9 @@ export function createEmbedServer(options: {
         await options.threads.set(thread_id, {
           kind: "patch",
           metadata: payload.metadata,
-        })
+        }),
       );
-    }
+    },
   );
 
   api.delete(
@@ -223,7 +223,7 @@ export function createEmbedServer(options: {
       const { thread_id } = c.req.valid("param");
       await options.threads.delete(thread_id);
       return new Response(null, { status: 204 });
-    }
+    },
   );
 
   api.post(
@@ -255,7 +255,7 @@ export function createEmbedServer(options: {
       }
       c.res.headers.set("X-Pagination-Total", total.toString());
       return jsonExtra(c, result);
-    }
+    },
   );
 
   api.get(
@@ -263,7 +263,7 @@ export function createEmbedServer(options: {
     zValidator("param", z.object({ thread_id: z.string().uuid() })),
     zValidator(
       "query",
-      z.object({ subgraphs: schemas.coercedBoolean.optional() })
+      z.object({ subgraphs: schemas.coercedBoolean.optional() }),
     ),
     async (c) => {
       // Get Latest Thread State
@@ -285,14 +285,14 @@ export function createEmbedServer(options: {
             createdAt: undefined,
             parentConfig: undefined,
             tasks: [],
-          })
+          }),
         );
       }
 
       const config = { configurable: { thread_id } };
       const result = await graph.getState(config, { subgraphs });
       return jsonExtra(c, stateSnapshotToThreadState(result));
-    }
+    },
   );
 
   api.post(
@@ -322,10 +322,10 @@ export function createEmbedServer(options: {
       const result = await graph.updateState(
         config,
         payload.values,
-        payload.as_node
+        payload.as_node,
       );
       return jsonExtra(c, { checkpoint: result.configurable });
-    }
+    },
   );
 
   // get thread state at checkpoint
@@ -336,11 +336,11 @@ export function createEmbedServer(options: {
       z.object({
         thread_id: z.string().uuid(),
         checkpoint_id: z.string().uuid(),
-      })
+      }),
     ),
     zValidator(
       "query",
-      z.object({ subgraphs: schemas.coercedBoolean.optional() })
+      z.object({ subgraphs: schemas.coercedBoolean.optional() }),
     ),
     async (c) => {
       // Get Thread State At Checkpoint
@@ -354,10 +354,10 @@ export function createEmbedServer(options: {
 
       const result = await graph.getState(
         { configurable: { thread_id, checkpoint_id } },
-        { subgraphs }
+        { subgraphs },
       );
       return jsonExtra(c, stateSnapshotToThreadState(result));
-    }
+    },
   );
 
   api.post(
@@ -368,7 +368,7 @@ export function createEmbedServer(options: {
       z.object({
         subgraphs: schemas.coercedBoolean.optional(),
         checkpoint: schemas.CheckpointSchema.nullish(),
-      })
+      }),
     ),
     async (c) => {
       // Get Thread State At Checkpoint post
@@ -382,10 +382,10 @@ export function createEmbedServer(options: {
 
       const result = await graph.getState(
         { configurable: { thread_id, ...checkpoint } },
-        { subgraphs }
+        { subgraphs },
       );
       return jsonExtra(c, stateSnapshotToThreadState(result));
-    }
+    },
   );
 
   api.post(
@@ -418,7 +418,7 @@ export function createEmbedServer(options: {
         result.push(stateSnapshotToThreadState(state));
       }
       return jsonExtra(c, result);
-    }
+    },
   );
 
   api.post(
@@ -446,7 +446,7 @@ export function createEmbedServer(options: {
 
       c.header("Content-Location", `/threads/${thread_id}/runs/${run.run_id}`);
       return jsonExtra(c, run);
-    }
+    },
   );
 
   api.get(
@@ -456,7 +456,7 @@ export function createEmbedServer(options: {
       z.object({
         thread_id: z.string().uuid(),
         run_id: z.string().uuid(),
-      })
+      }),
     ),
     async (c) => {
       const { thread_id, run_id } = c.req.valid("param");
@@ -509,7 +509,7 @@ export function createEmbedServer(options: {
           throw err;
         }
       });
-    }
+    },
   );
 
   api.post(
@@ -519,7 +519,7 @@ export function createEmbedServer(options: {
       z.object({
         thread_id: z.string().uuid(),
         run_id: z.string().uuid(),
-      })
+      }),
     ),
     async (c) => {
       const { thread_id, run_id } = c.req.valid("param");
@@ -529,7 +529,7 @@ export function createEmbedServer(options: {
         state.pendingRuns.splice(idx, 1);
       }
       return new Response(null, { status: 204 });
-    }
+    },
   );
 
   api.post(
@@ -581,7 +581,7 @@ export function createEmbedServer(options: {
           }
         }
       });
-    }
+    },
   );
 
   api.post("/runs/stream", zValidator("json", schemas.RunCreate), async (c) => {
@@ -627,7 +627,7 @@ export function createEmbedServer(options: {
   api.notFound((c) => {
     return c.json(
       { error: `${c.req.method} ${c.req.path} not implemented` },
-      404
+      404,
     );
   });
 

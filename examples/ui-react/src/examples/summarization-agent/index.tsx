@@ -184,15 +184,15 @@ function ConversationStats({
               hasSummary
                 ? "bg-violet-500/20 text-violet-300"
                 : messageCount >= 6
-                ? "bg-amber-500/20 text-amber-300"
-                : "bg-emerald-500/20 text-emerald-300"
+                  ? "bg-amber-500/20 text-amber-300"
+                  : "bg-emerald-500/20 text-emerald-300"
             }`}
           >
             {hasSummary
               ? "Summarized"
               : messageCount >= 6
-              ? "Near Limit"
-              : "Normal"}
+                ? "Near Limit"
+                : "Normal"}
           </span>
         </div>
 
@@ -320,7 +320,7 @@ export function SummarizationAgent() {
     (content: string) => {
       stream.submit({ messages: [{ content, type: "human" }] });
     },
-    [stream]
+    [stream],
   );
 
   const handlePrefill = useCallback(async () => {

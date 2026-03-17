@@ -132,7 +132,6 @@ export class MemorySaver extends BaseCheckpointSaver {
     } else {
       const checkpoints = this.storage[thread_id]?.[checkpoint_ns];
       if (checkpoints !== undefined) {
-        // eslint-disable-next-line prefer-destructuring
         checkpoint_id = Object.keys(checkpoints).sort((a, b) =>
           b.localeCompare(a)
         )[0];

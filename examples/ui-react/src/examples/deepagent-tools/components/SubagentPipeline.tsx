@@ -33,7 +33,7 @@ export function SubagentPipeline({
         const bIndex = SORT_ORDER.indexOf(bType);
         return (aIndex === -1 ? 999 : aIndex) - (bIndex === -1 ? 999 : bIndex);
       }),
-    [subagents]
+    [subagents],
   );
 
   if (sortedSubagents.length === 0) {
@@ -41,14 +41,14 @@ export function SubagentPipeline({
   }
 
   const completedCount = sortedSubagents.filter(
-    (s) => s.status === "complete"
+    (s) => s.status === "complete",
   ).length;
   const totalCount = sortedSubagents.length;
 
   // Count total tool calls across all subagents
   const totalToolCalls = sortedSubagents.reduce(
     (acc, s) => acc + s.toolCalls.length,
-    0
+    0,
   );
 
   return (

@@ -170,7 +170,7 @@ export const CommandSchema = z.object({
         z.union([
           z.string(),
           z.object({ node: z.string(), input: z.unknown().optional() }),
-        ])
+        ]),
       ),
     ])
     .optional(),
@@ -223,7 +223,7 @@ export const RunCreate = z
             "debug",
             "custom",
             "tools",
-          ])
+          ]),
         ),
         z.enum([
           "values",
@@ -288,7 +288,7 @@ export const AssistantSearchRequest = z
     name: z
       .string()
       .describe(
-        "Filter by name. The filtering logic will match assistants where 'name' is a substring (case insensitive) of the assistant name."
+        "Filter by name. The filtering logic will match assistants where 'name' is a substring (case insensitive) of the assistant name.",
       )
       .optional(),
     limit: z
@@ -400,9 +400,9 @@ export const ThreadCreate = z
               values: z.unknown().nullish(),
               command: CommandSchema.nullish(),
               as_node: z.string(),
-            })
+            }),
           ),
-        })
+        }),
       )
       .describe("The supersteps to apply to the thread.")
       .optional(),

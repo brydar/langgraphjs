@@ -28,7 +28,7 @@ function hasContent(message: Message): boolean {
   }
   if (Array.isArray(message.content)) {
     return message.content.some(
-      (c) => c.type === "text" && c.text.trim().length > 0
+      (c) => c.type === "text" && c.text.trim().length > 0,
     );
   }
   return false;
@@ -47,7 +47,7 @@ export function ToolCallingAgent() {
     (content: string) => {
       stream.submit({ messages: [{ content, type: "human" }] });
     },
-    [stream]
+    [stream],
   );
 
   return (
@@ -94,7 +94,7 @@ export function ToolCallingAgent() {
               {/* Show loading indicator when streaming and no content yet */}
               {stream.isLoading &&
                 !stream.messages.some(
-                  (m) => m.type === "ai" && hasContent(m)
+                  (m) => m.type === "ai" && hasContent(m),
                 ) &&
                 stream.toolCalls.length === 0 && <LoadingIndicator />}
             </div>

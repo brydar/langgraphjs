@@ -20,7 +20,7 @@ export function reactAgent(nTools: number, checkpointer?: MemorySaver) {
       schema: z.object({
         query: z.string().describe("The query parameter"),
       }),
-    }
+    },
   );
 
   // Create fake model with tool call responses
@@ -40,7 +40,7 @@ export function reactAgent(nTools: number, checkpointer?: MemorySaver) {
               },
             ],
             id: uuid(),
-          })
+          }),
       ),
 
       // Final response

@@ -12,8 +12,8 @@ export const getWeatherForecast = tool(
     // Use Open-Meteo geocoding API to get coordinates
     const geoResponse = await fetch(
       `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(
-        location
-      )}&count=1`
+        location,
+      )}&count=1`,
     );
     const geoData = await geoResponse.json();
 
@@ -25,7 +25,7 @@ export const getWeatherForecast = tool(
 
     // Fetch extended forecast
     const weatherResponse = await fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weather_code&timezone=auto&forecast_days=${days}`
+      `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weather_code&timezone=auto&forecast_days=${days}`,
     );
     const weatherData = await weatherResponse.json();
 
@@ -68,7 +68,7 @@ export const getWeatherForecast = tool(
         .default(7)
         .describe("Number of forecast days"),
     }),
-  }
+  },
 );
 
 /**
@@ -105,7 +105,7 @@ export const getBestTravelSeason = tool(
     schema: z.object({
       destination: z.string().describe("The destination to check"),
     }),
-  }
+  },
 );
 
 /**
@@ -119,8 +119,8 @@ export const searchAttractions = tool(
     // Use Open-Meteo geocoding to get location name
     const geoResponse = await fetch(
       `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(
-        location
-      )}&count=1`
+        location,
+      )}&count=1`,
     );
     const geoData = await geoResponse.json();
 
@@ -159,7 +159,7 @@ export const searchAttractions = tool(
         .default("all")
         .describe("Category of attractions"),
     }),
-  }
+  },
 );
 
 /**
@@ -196,7 +196,7 @@ export const getLocalEvents = tool(
         .string()
         .describe("Date range for events (e.g., 'Dec 15-22')"),
     }),
-  }
+  },
 );
 
 /**
@@ -239,7 +239,7 @@ export const estimateFlightCost = tool(
       destination: z.string().describe("Arrival city"),
       travelers: z.number().min(1).default(1).describe("Number of travelers"),
     }),
-  }
+  },
 );
 
 /**
@@ -298,7 +298,7 @@ export const estimateAccommodation = tool(
         .default("midrange")
         .describe("Accommodation style"),
     }),
-  }
+  },
 );
 
 /**
@@ -344,5 +344,5 @@ export const calculateTotalBudget = tool(
       days: z.number().describe("Number of days"),
       travelers: z.number().describe("Number of travelers"),
     }),
-  }
+  },
 );

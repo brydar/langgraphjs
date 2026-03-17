@@ -154,8 +154,8 @@ export function SubagentToolCallCard({
                     todo.status === "completed"
                       ? "bg-green-400"
                       : todo.status === "in_progress"
-                      ? "bg-yellow-400"
-                      : "bg-neutral-500"
+                        ? "bg-yellow-400"
+                        : "bg-neutral-500"
                   }`}
                 />
                 <span className="text-neutral-300">{todo.content}</span>
@@ -198,7 +198,7 @@ export function SubagentToolCallCard({
  */
 function renderToolResult(
   toolName: string,
-  result: Record<string, unknown>
+  result: Record<string, unknown>,
 ): React.ReactNode {
   switch (toolName) {
     case "search_web": {
@@ -230,8 +230,8 @@ function renderToolResult(
               sentiment === "positive"
                 ? "bg-green-500/20 text-green-400"
                 : sentiment === "negative"
-                ? "bg-red-500/20 text-red-400"
-                : "bg-neutral-500/20 text-neutral-400"
+                  ? "bg-red-500/20 text-red-400"
+                  : "bg-neutral-500/20 text-neutral-400"
             }`}
           >
             {sentiment}
@@ -306,8 +306,8 @@ function renderToolResult(
                   todo.status === "completed"
                     ? "bg-green-400"
                     : todo.status === "in_progress"
-                    ? "bg-yellow-400"
-                    : "bg-neutral-400"
+                      ? "bg-yellow-400"
+                      : "bg-neutral-400"
                 }`}
               />
               <span className="text-neutral-300 truncate">{todo.content}</span>

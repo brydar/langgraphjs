@@ -41,7 +41,7 @@ export const StartServerSchema = z.object({
     z.union([
       z.string(),
       z.object({ path: z.string(), description: z.string().optional() }),
-    ])
+    ]),
   ),
   auth: z
     .object({
@@ -76,7 +76,7 @@ export const StartServerSchema = z.object({
 
 export async function startServer(
   options: z.infer<typeof StartServerSchema>,
-  storage?: { ops?: Ops }
+  storage?: { ops?: Ops },
 ) {
   const semver = await checkLangGraphSemver();
   const invalidPackages = semver.filter((s) => !s.satisfies);
@@ -87,8 +87,8 @@ export async function startServer(
         invalidPackages.map(({ name, version, required }) => [
           name,
           { version, required },
-        ])
-      )
+        ]),
+      ),
     );
   }
 
@@ -108,7 +108,7 @@ export async function startServer(
         assistants: {},
         assistant_versions: [],
         retry_counter: {},
-      })
+      }),
     );
     initCalls.push(opsConn.initialize(options.cwd));
     ops = new FileSystemOps(opsConn);
@@ -135,11 +135,11 @@ export async function startServer(
         hasGraphDescriptions = true;
       }
       return [graphId, rawSpec.path];
-    })
+    }),
   );
   if (hasGraphDescriptions) {
     logger.warn(
-      "A graph definition in `langgraph.json` has a `description` property. Local MCP features are not yet supported with the JS CLI and will be ignored."
+      "A graph definition in `langgraph.json` has a `description` property. Local MCP features are not yet supported with the JS CLI and will be ignored.",
     );
   }
   await registerFromEnv(ops.assistants, graphPaths, { cwd: options.cwd });
@@ -175,7 +175,7 @@ export async function startServer(
         assistants: z.boolean().optional(),
         checkpointer: z.boolean().optional(),
         store: z.boolean().optional(),
-      })
+      }),
     ),
     (c) => {
       const { runs, threads, assistants, checkpointer, store } =
@@ -183,7 +183,7 @@ export async function startServer(
 
       ops.truncate({ runs, threads, assistants, checkpointer, store });
       return c.json({ ok: true });
-    }
+    },
   );
 
   app.use(cors(options.http?.cors));
@@ -228,8 +228,8 @@ export async function startServer(
         { fetch: app.fetch, port: options.port, hostname: options.host },
         (c) => {
           resolve({ host: `${c.address}:${c.port}`, cleanup });
-        }
+        },
       );
-    }
+    },
   );
 }

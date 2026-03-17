@@ -5,11 +5,11 @@ import * as semver from "semver";
 
 const packageJsonPath = path.resolve(
   url.fileURLToPath(import.meta.url),
-  "../../../package.json"
+  "../../../package.json",
 );
 
 export async function checkSemver(
-  packages: { name: string; version: string }[]
+  packages: { name: string; version: string }[],
 ): Promise<
   { name: string; version: string; required: string; satisfies: boolean }[]
 > {
@@ -57,7 +57,7 @@ export async function checkLangGraphSemver() {
   ];
 
   const resolved = await Promise.all(
-    validate.map((name) => resolveVersion(name))
+    validate.map((name) => resolveVersion(name)),
   );
   return checkSemver(resolved);
 }

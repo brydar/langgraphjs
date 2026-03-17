@@ -26,7 +26,7 @@ function hasContent(message: Message): boolean {
   }
   if (Array.isArray(message.content)) {
     return message.content.some(
-      (c) => c.type === "text" && c.text.trim().length > 0
+      (c) => c.type === "text" && c.text.trim().length > 0,
     );
   }
   return false;
@@ -44,19 +44,19 @@ export function ToolStreaming() {
     (content: string) => {
       stream.submit({ messages: [{ content, type: "human" } as any] });
     },
-    [stream]
+    [stream],
   );
 
   const hasMessages = stream.messages.length > 0;
 
   const activeProgress = stream.toolProgress.filter(
-    (tp) => tp.state === "starting" || tp.state === "running"
+    (tp) => tp.state === "starting" || tp.state === "running",
   );
 
   const lastMessage = stream.messages[stream.messages.length - 1];
   const waitingForFirstResponse = lastMessage?.type === "human";
   const hasAiContent = stream.messages.some(
-    (m) => m.type === "ai" && hasContent(m)
+    (m) => m.type === "ai" && hasContent(m),
   );
   const showLoading =
     (stream.isLoading || waitingForFirstResponse) &&

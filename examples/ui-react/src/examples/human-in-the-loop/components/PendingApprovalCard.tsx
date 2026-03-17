@@ -25,7 +25,7 @@ export function PendingApprovalCard({
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedArgs, setEditedArgs] = useState<Record<string, unknown>>(
-    actionRequest.args
+    actionRequest.args,
   );
   const [rejectReason, setRejectReason] = useState("");
   const [showRejectInput, setShowRejectInput] = useState(false);

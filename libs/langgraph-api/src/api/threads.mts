@@ -19,14 +19,14 @@ api.post("/threads", zValidator("json", schemas.ThreadCreate), async (c) => {
   const thread = await threads().put(
     payload.thread_id || uuid7(),
     { metadata: payload.metadata, if_exists: payload.if_exists ?? "raise" },
-    c.var.auth
+    c.var.auth,
   );
 
   if (payload.supersteps?.length) {
     await threads().state.bulk(
       { configurable: { thread_id: thread.thread_id } },
       payload.supersteps,
-      c.var.auth
+      c.var.auth,
     );
   }
 
@@ -54,14 +54,14 @@ api.post(
         sort_order: payload.sort_order ?? "desc",
         select: payload.select as ThreadSelectField[],
       },
-      c.var.auth
+      c.var.auth,
     )) {
       result.push(
         Object.fromEntries(
           Object.entries(item.thread).filter(
-            ([k]) => !payload.select || payload.select.includes(k)
-          )
-        )
+            ([k]) => !payload.select || payload.select.includes(k),
+          ),
+        ),
       );
       // Only set total if it's the first item
       if (total === 0) {
@@ -76,7 +76,7 @@ api.post(
       c.res.headers.set("X-Pagination-Total", nextOffset.toString());
     }
     return jsonExtra(c, result);
-  }
+  },
 );
 
 api.post(
@@ -86,7 +86,7 @@ api.post(
     const payload = c.req.valid("json");
     const total = await threads().count(payload, c.var.auth);
     return c.json(total);
-  }
+  },
 );
 
 api.get(
@@ -94,7 +94,7 @@ api.get(
   zValidator("param", z.object({ thread_id: z.string().uuid() })),
   zValidator(
     "query",
-    z.object({ subgraphs: schemas.coercedBoolean.optional() })
+    z.object({ subgraphs: schemas.coercedBoolean.optional() }),
   ),
   async (c) => {
     // Get Latest Thread State
@@ -105,12 +105,12 @@ api.get(
       await threads().state.get(
         { configurable: { thread_id } },
         { subgraphs },
-        c.var.auth
-      )
+        c.var.auth,
+      ),
     );
 
     return jsonExtra(c, state);
-  }
+  },
 );
 
 api.post(
@@ -136,11 +136,11 @@ api.post(
       config,
       payload.values,
       payload.as_node,
-      c.var.auth
+      c.var.auth,
     );
 
     return jsonExtra(c, inserted);
-  }
+  },
 );
 
 api.get(
@@ -150,11 +150,11 @@ api.get(
     z.object({
       thread_id: z.string().uuid(),
       checkpoint_id: z.string().uuid(),
-    })
+    }),
   ),
   zValidator(
     "query",
-    z.object({ subgraphs: schemas.coercedBoolean.optional() })
+    z.object({ subgraphs: schemas.coercedBoolean.optional() }),
   ),
   async (c) => {
     // Get Thread State At Checkpoint
@@ -164,12 +164,12 @@ api.get(
       await threads().state.get(
         { configurable: { thread_id, checkpoint_id } },
         { subgraphs },
-        c.var.auth
-      )
+        c.var.auth,
+      ),
     );
 
     return jsonExtra(c, state);
-  }
+  },
 );
 
 api.post(
@@ -180,7 +180,7 @@ api.post(
     z.object({
       subgraphs: schemas.coercedBoolean.optional(),
       checkpoint: schemas.CheckpointSchema.nullish(),
-    })
+    }),
   ),
   async (c) => {
     // Get Thread State At Checkpoint Post
@@ -191,12 +191,12 @@ api.post(
       await threads().state.get(
         { configurable: { thread_id, ...checkpoint } },
         { subgraphs },
-        c.var.auth
-      )
+        c.var.auth,
+      ),
     );
 
     return jsonExtra(c, state);
-  }
+  },
 );
 
 api.get(
@@ -211,7 +211,7 @@ api.get(
         .default("10")
         .transform((value) => parseInt(value, 10)),
       before: z.string().optional(),
-    })
+    }),
   ),
   async (c) => {
     // Get Thread History
@@ -221,10 +221,10 @@ api.get(
     const states = await threads().state.list(
       { configurable: { thread_id, checkpoint_ns: "" } },
       { limit, before },
-      c.var.auth
+      c.var.auth,
     );
     return jsonExtra(c, states.map(stateSnapshotToThreadState));
-  }
+  },
 );
 
 api.post(
@@ -239,11 +239,11 @@ api.post(
     const states = await threads().state.list(
       { configurable: { thread_id, checkpoint_ns: "", ...checkpoint } },
       { limit, before, metadata },
-      c.var.auth
+      c.var.auth,
     );
 
     return jsonExtra(c, states.map(stateSnapshotToThreadState));
-  }
+  },
 );
 
 api.get(
@@ -253,7 +253,7 @@ api.get(
     // Get Thread
     const { thread_id } = c.req.valid("param");
     return jsonExtra(c, await threads().get(thread_id, c.var.auth));
-  }
+  },
 );
 
 api.delete(
@@ -264,7 +264,7 @@ api.delete(
     const { thread_id } = c.req.valid("param");
     await threads().delete(thread_id, c.var.auth);
     return new Response(null, { status: 204 });
-  }
+  },
 );
 
 api.patch(
@@ -277,9 +277,9 @@ api.patch(
     const { metadata } = c.req.valid("json");
     return jsonExtra(
       c,
-      await threads().patch(thread_id, { metadata }, c.var.auth)
+      await threads().patch(thread_id, { metadata }, c.var.auth),
     );
-  }
+  },
 );
 
 api.post(
@@ -289,7 +289,7 @@ api.post(
     // Copy Thread
     const { thread_id } = c.req.valid("param");
     return jsonExtra(c, await threads().copy(thread_id, c.var.auth));
-  }
+  },
 );
 
 export default api;

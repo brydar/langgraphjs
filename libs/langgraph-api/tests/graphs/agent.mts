@@ -35,7 +35,7 @@ class StableFakeListChatModel extends FakeListChatModel {
   async *_streamResponseChunks(
     _messages: BaseMessage[],
     options: this["ParsedCallOptions"],
-    runManager?: CallbackManagerForLLMRun
+    runManager?: CallbackManagerForLLMRun,
   ): AsyncGenerator<ChatGenerationChunk> {
     const response = this._currentResponse();
     this._incrementResponse();
@@ -66,7 +66,7 @@ class StableFakeListChatModel extends FakeListChatModel {
         undefined,
         undefined,
         undefined,
-        { chunk }
+        { chunk },
       );
     }
   }
@@ -86,7 +86,7 @@ const getModel = (threadId: string) => {
 
 const agentNode = async (
   state: typeof GraphAnnotationInput.State,
-  config: LangGraphRunnableConfig
+  config: LangGraphRunnableConfig,
 ) => {
   if (state.interrupt) interrupt("i want to interrupt");
 
@@ -125,7 +125,7 @@ const agentNode = async (
 
 const toolNode = async (
   state: typeof GraphAnnotationInput.State,
-  config: LangGraphRunnableConfig
+  config: LangGraphRunnableConfig,
 ) => {
   const store = config.store;
   let sharedStateFromStoreConfig: Record<string, any> | null = null;
@@ -149,7 +149,7 @@ const toolNode = async (
 
 const checkSharedStateNode = async (
   _: typeof GraphAnnotationInput.State,
-  config: LangGraphRunnableConfig
+  config: LangGraphRunnableConfig,
 ): Promise<Partial<typeof GraphAnnotationInput.State>> => {
   const store = config.store;
   const namespace = ["inputtedState", "data"];
@@ -179,7 +179,7 @@ const workflow = new StateGraph(
     input: GraphAnnotationInput,
     output: GraphAnnotationOutput,
   },
-  Annotation.Root({ model_name: Annotation<string> })
+  Annotation.Root({ model_name: Annotation<string> }),
 )
   .addNode("agent", agentNode)
   .addNode("tool", toolNode)
