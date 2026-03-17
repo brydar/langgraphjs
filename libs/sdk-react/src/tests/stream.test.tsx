@@ -1056,9 +1056,7 @@ it("browser tools - executes in browser and resumes agent automatically", async 
 
   // useStream handles the browser_tool interrupt automatically — no user
   // action required. Wait for the full agent cycle to complete.
-  await expect
-    .element(screen.getByTestId("loading"))
-    .toHaveTextContent("idle");
+  await expect.element(screen.getByTestId("loading")).toHaveTextContent("idle");
 
   // Human message is visible.
   await expect
@@ -1076,9 +1074,7 @@ it("browser tools - onBrowserTool callback fires start and success events", asyn
 
   await screen.getByTestId("submit").click();
 
-  await expect
-    .element(screen.getByTestId("loading"))
-    .toHaveTextContent("idle");
+  await expect.element(screen.getByTestId("loading")).toHaveTextContent("idle");
 
   // start event fires before the execute function is called
   await expect
@@ -1102,9 +1098,7 @@ it("browser tools - propagates execute error back to agent as error payload", as
 
   await screen.getByTestId("submit").click();
 
-  await expect
-    .element(screen.getByTestId("loading"))
-    .toHaveTextContent("idle");
+  await expect.element(screen.getByTestId("loading")).toHaveTextContent("idle");
 
   // The error phase is surfaced via onBrowserTool
   await expect

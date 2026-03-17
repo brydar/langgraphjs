@@ -2492,9 +2492,9 @@ function makeBrowserToolComponent(
 ) {
   return defineComponent({
     setup() {
-      const toolEvents = ref<
-        { phase: string; name: string; error?: Error }[]
-      >([]);
+      const toolEvents = ref<{ phase: string; name: string; error?: Error }[]>(
+        [],
+      );
 
       const defaultExecute = async (_args: unknown) => ({
         latitude: 37.7749,
@@ -2504,7 +2504,9 @@ function makeBrowserToolComponent(
       const { messages, isLoading, submit } = useStream({
         assistantId: "browserToolAgent",
         apiUrl: serverUrl,
-        browserTools: [{ name: "get_location", execute: execute ?? defaultExecute }],
+        browserTools: [
+          { name: "get_location", execute: execute ?? defaultExecute },
+        ],
         onBrowserTool: (event) => {
           toolEvents.value = [...toolEvents.value, event];
         },
@@ -2568,9 +2570,7 @@ it("browser tools - executes in browser and resumes agent automatically", async 
 
   await screen.getByTestId("submit").click();
 
-  await expect
-    .element(screen.getByTestId("loading"))
-    .toHaveTextContent("idle");
+  await expect.element(screen.getByTestId("loading")).toHaveTextContent("idle");
 
   await expect
     .element(screen.getByTestId("message-0"))
@@ -2586,9 +2586,7 @@ it("browser tools - onBrowserTool callback fires start and success events", asyn
 
   await screen.getByTestId("submit").click();
 
-  await expect
-    .element(screen.getByTestId("loading"))
-    .toHaveTextContent("idle");
+  await expect.element(screen.getByTestId("loading")).toHaveTextContent("idle");
 
   await expect
     .element(screen.getByTestId("tool-event-0"))
@@ -2608,9 +2606,7 @@ it("browser tools - propagates execute error back to agent as error payload", as
 
   await screen.getByTestId("submit").click();
 
-  await expect
-    .element(screen.getByTestId("loading"))
-    .toHaveTextContent("idle");
+  await expect.element(screen.getByTestId("loading")).toHaveTextContent("idle");
 
   await expect
     .element(screen.getByTestId("tool-event-1"))
