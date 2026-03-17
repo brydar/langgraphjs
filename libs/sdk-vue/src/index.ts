@@ -308,7 +308,6 @@ function useStreamLGP<
       }) => boolean;
     },
   ) {
-    // eslint-disable-next-line no-param-reassign
     lastEventId ??= "-1";
     if (!threadId.value) return;
 

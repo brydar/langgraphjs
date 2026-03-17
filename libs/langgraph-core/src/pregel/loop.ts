@@ -270,7 +270,6 @@ export class PregelLoop {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   tasks: Record<string, PregelExecutableTask<any, any>> = {};
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   stream: IterableReadableWritableStream;
 
   checkpointerPromises: Promise<unknown>[] = [];

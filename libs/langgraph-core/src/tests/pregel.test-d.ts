@@ -1,4 +1,3 @@
-/* eslint-disable no-constant-condition */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import "../graph/zod/plugin.js";
 import { z } from "zod/v3";

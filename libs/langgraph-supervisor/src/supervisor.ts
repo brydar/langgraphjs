@@ -341,7 +341,7 @@ const createSupervisor = <
     supervisorLLM.kwargs ??= {};
 
     // @ts-expect-error hack
-    // eslint-disable-next-line prefer-destructuring
+
     const kwargs = supervisorLLM.kwargs;
 
     if (!("tools" in kwargs)) {

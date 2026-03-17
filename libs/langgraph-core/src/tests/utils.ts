@@ -1,4 +1,3 @@
-/* eslint-disable no-promise-executor-return */
 import { expect, it } from "vitest";
 import { Graph as DrawableGraph } from "@langchain/core/runnables/graph";
 import {
@@ -140,7 +139,6 @@ class AnyStringSame {
   }
 
   asymmetricMatch(other: unknown) {
-    // eslint-disable-next-line no-instanceof/no-instanceof
     if (!(typeof other === "string" || other instanceof String)) {
       return false;
     }

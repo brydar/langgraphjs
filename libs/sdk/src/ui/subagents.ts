@@ -939,7 +939,7 @@ export class SubagentManager<ToolCall = DefaultToolCall> {
         // Check if we have a result for this tool call
         const toolResult = toolResults.get(toolCall.id);
         const isComplete = !!toolResult;
-        // eslint-disable-next-line no-nested-ternary
+
         const status: SubagentStatus = isComplete
           ? toolResult.status === "error"
             ? "error"

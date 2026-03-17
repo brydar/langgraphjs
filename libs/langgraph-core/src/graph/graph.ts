@@ -266,7 +266,7 @@ export class Graph<
     }
 
     const nodes = (
-      isMutlipleNodes(args) // eslint-disable-line no-nested-ternary
+      isMutlipleNodes(args)
         ? Array.isArray(args[0])
           ? args[0]
           : Object.entries(args[0])
@@ -752,14 +752,14 @@ export class CompiledGraph<
           }
 
           // TODO: Remove default name once we stop supporting core 0.2.0
-          // eslint-disable-next-line no-inner-declarations
+
           function _isRunnableInterface(
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             thing: any
           ): thing is RunnableInterface {
             return thing ? thing.lc_runnable : false;
           }
-          // eslint-disable-next-line no-inner-declarations
+
           function _nodeDataStr(
             id: string | undefined,
             data: RunnableInterface | RunnableIOSchema
@@ -948,14 +948,14 @@ export class CompiledGraph<
           }
 
           // TODO: Remove default name once we stop supporting core 0.2.0
-          // eslint-disable-next-line no-inner-declarations
+
           function _isRunnableInterface(
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             thing: any
           ): thing is RunnableInterface {
             return thing ? thing.lc_runnable : false;
           }
-          // eslint-disable-next-line no-inner-declarations
+
           function _nodeDataStr(
             id: string | undefined,
             data: RunnableInterface | RunnableIOSchema

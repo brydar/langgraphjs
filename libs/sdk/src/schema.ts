@@ -87,7 +87,7 @@ export interface GraphSchema {
 export type Subgraphs = Record<string, GraphSchema>;
 
 export type Metadata = Optional<{
-  source?: "input" | "loop" | "update" | (string & {}); // eslint-disable-line @typescript-eslint/no-unsafe-function-type
+  source?: "input" | "loop" | "update" | (string & {});
 
   step?: number;
 
@@ -175,7 +175,7 @@ export interface Interrupt<TValue = unknown> {
    * Will be deprecated in the future.
    * @deprecated Will be removed in the future.
    */
-  when?: "during" | (string & {}); // eslint-disable-line @typescript-eslint/no-unsafe-function-type
+  when?: "during" | (string & {});
 
   /**
    * Whether the interrupt can be resumed.

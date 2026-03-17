@@ -646,7 +646,6 @@ export function useStreamLGP<
   ) => {
     setToolProgressMap(new Map());
 
-    // eslint-disable-next-line no-param-reassign
     lastEventId ??= "-1";
     if (!threadId) return;
 

@@ -234,7 +234,6 @@ describe("deep agent", () => {
 
     const msg = get(stream.messages)[0];
     if (AIMessage.isInstance(msg)) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const toolCalls = stream.getToolCalls(msg as any);
       expectTypeOf(toolCalls[0].state).toEqualTypeOf<
         "pending" | "completed" | "error"

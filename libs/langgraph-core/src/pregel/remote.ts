@@ -307,7 +307,7 @@ export class RemoteGraph<
           interrupt_id: id,
           ...rest,
         })),
-        // eslint-disable-next-line no-nested-ternary
+
         state: task.state
           ? this._createStateSnapshot(task.state)
           : task.checkpoint
@@ -448,7 +448,7 @@ export class RemoteGraph<
         const eventComponents = chunk.event.split(
           CHECKPOINT_NAMESPACE_SEPARATOR
         );
-        // eslint-disable-next-line prefer-destructuring
+
         mode = eventComponents[0];
         namespace = eventComponents.slice(1);
       } else {

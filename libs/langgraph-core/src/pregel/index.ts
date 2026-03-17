@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import {
   _coerceToRunnable,
   getCallbackManagerForConfig,
@@ -1104,7 +1103,7 @@ export class Pregel<
       // remove task_ids from checkpoint_ns
       const recastNamespace = recastCheckpointNamespace(checkpointNamespace);
       // find the subgraph with the matching name
-      // eslint-disable-next-line no-unreachable-loop
+
       for await (const [, pregel] of this.getSubgraphsAsync(
         recastNamespace,
         true
@@ -1509,13 +1508,11 @@ export class Pregel<
           // if two nodes updated the state at the same time, it's ambiguous
           if (lastSeenByNode) {
             if (lastSeenByNode.length === 1) {
-              // eslint-disable-next-line prefer-destructuring
               asNode = lastSeenByNode[0][1];
             } else if (
               lastSeenByNode[lastSeenByNode.length - 1][0] !==
               lastSeenByNode[lastSeenByNode.length - 2][0]
             ) {
-              // eslint-disable-next-line prefer-destructuring
               asNode = lastSeenByNode[lastSeenByNode.length - 1][1];
             }
           }

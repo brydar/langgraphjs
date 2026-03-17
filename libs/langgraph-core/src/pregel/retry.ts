@@ -65,7 +65,6 @@ export async function _runWithRetry<
   N extends PropertyKey,
   C extends PropertyKey,
 >(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   pregelTask: PregelExecutableTask<N, C>,
   retryPolicy?: RetryPolicy,
   configurable?: Record<string, unknown>,
@@ -89,7 +88,6 @@ export async function _runWithRetry<
   if (configurable) config = patchConfigurable(config, configurable);
   config = { ...config, signal };
 
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     if (signal?.aborted) {
       // no need to throw here - we'll throw from the runner, instead.
@@ -149,7 +147,7 @@ export async function _runWithRetry<
         ? Math.floor(interval + Math.random() * 1000)
         : interval;
       // sleep before retrying
-      // eslint-disable-next-line no-promise-executor-return
+
       await new Promise((resolve) => setTimeout(resolve, intervalWithJitter));
       // log the retry
       const errorName =

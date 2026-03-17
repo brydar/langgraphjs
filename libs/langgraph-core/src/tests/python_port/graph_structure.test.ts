@@ -1332,7 +1332,7 @@ describe("Graph Structure Tests (Python port)", () => {
         }
 
         // Extract second part of tuples
-        // eslint-disable-next-line no-param-reassign
+
         y = tupleArray.map(([, second]) => second);
       }
 
@@ -1481,7 +1481,7 @@ describe("Graph Structure Tests (Python port)", () => {
         }
 
         // Extract second part of tuples
-        // eslint-disable-next-line no-param-reassign
+
         y = tupleArray.map(([, second]) => second);
       }
 
@@ -1637,7 +1637,7 @@ describe("Graph Structure Tests (Python port)", () => {
         }
 
         // Extract second part of tuples
-        // eslint-disable-next-line no-param-reassign
+
         y = tupleArray.map(([, second]) => second);
       }
 
@@ -1788,7 +1788,7 @@ describe("Graph Structure Tests (Python port)", () => {
         }
 
         // Extract second part of tuples
-        // eslint-disable-next-line no-param-reassign
+
         y = tupleArray.map(([, second]) => second);
       }
 
@@ -2350,7 +2350,7 @@ describe("Graph Structure Tests (Python port)", () => {
     expect(Object.keys(streamNs)).toContain(""); // Root namespace
 
     // Get history for each namespace
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const historyNs: Record<string, StateSnapshot[]> = {};
 
     for (const nsKey of Object.keys(streamNs)) {

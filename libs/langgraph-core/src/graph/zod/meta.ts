@@ -292,7 +292,6 @@ export function withLangGraph<
   if (meta.reducer && !meta.default) {
     const defaultValueGetter = getInteropZodDefaultGetter(schema);
     if (defaultValueGetter != null) {
-      // eslint-disable-next-line no-param-reassign
       meta.default = defaultValueGetter;
     }
   }

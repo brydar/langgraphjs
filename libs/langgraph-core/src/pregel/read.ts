@@ -26,7 +26,6 @@ export class ChannelRead<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mapper?: (args: any) => any;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(
     channel: string | Array<string>,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

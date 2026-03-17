@@ -692,7 +692,6 @@ export function useStreamLGP<
       }) => boolean;
     },
   ) {
-    // eslint-disable-next-line no-param-reassign
     lastEventId ??= "-1";
     const tid = threadId();
     if (!tid) return;

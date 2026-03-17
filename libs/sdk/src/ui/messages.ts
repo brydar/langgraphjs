@@ -95,7 +95,6 @@ export class MessageTupleManager {
     // TODO: this is sometimes sent from the API
     // figure out how to prevent this or move this to LC.js
     if (serialized.type.endsWith("MessageChunk")) {
-      // eslint-disable-next-line no-param-reassign
       serialized.type = serialized.type
         .slice(0, -"MessageChunk".length)
         .toLowerCase() as Message["type"];

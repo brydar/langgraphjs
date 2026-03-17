@@ -468,7 +468,7 @@ describe("InferAgentToolCalls schema fallback", () => {
   test("prefers _call over schema when _call is public", () => {
     type ToolWithPublicCall = {
       name: "tool_a";
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       _call: (arg: { fromCall: boolean }, ...rest: any[]) => any;
       schema: { _input: { fromSchema: string } };
     };

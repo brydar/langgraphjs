@@ -194,7 +194,6 @@ type MergeReturnType<Prev, Curr> = Prev & Curr extends infer T
 
 type Prettify<T> = {
   [K in keyof T]: T[K];
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 } & {};
 
 /**
@@ -839,7 +838,7 @@ export class StateGraph<
     }
 
     const nodes = (
-      isMultipleNodes(args) // eslint-disable-line no-nested-ternary
+      isMultipleNodes(args)
         ? Array.isArray(args[0])
           ? args[0]
           : Object.entries(args[0]).map(([key, action]) => [key, action])

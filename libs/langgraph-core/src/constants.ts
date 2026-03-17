@@ -177,7 +177,7 @@ export function _isSendInterface(x: unknown): x is SendInterface {
  * // { subjects: ["cats", "dogs"], jokes: [`Joke about cats`, `Joke about dogs`] }
  * ```
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 export class Send<
   Node extends string = string,
   Args = any,
@@ -376,10 +376,7 @@ export type CommandParams<
    *   - `Send` object (to execute a node with the input provided)
    *   - sequence of `Send` objects
    */
-  goto?:
-    | Nodes
-    | SendInterface<Nodes> // eslint-disable-line @typescript-eslint/no-explicit-any
-    | (Nodes | SendInterface<Nodes>)[]; // eslint-disable-line @typescript-eslint/no-explicit-any
+  goto?: Nodes | SendInterface<Nodes> | (Nodes | SendInterface<Nodes>)[];
 };
 
 /**

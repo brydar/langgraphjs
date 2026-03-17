@@ -443,10 +443,7 @@ export interface AgentMiddlewareLike<
  * type parameter, similar to how langchain's InferMiddlewareState works.
  */
 type SafeInferInteropZodInput<T> =
-  InferInteropZodInput<T> extends never
-    ? // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-      {}
-    : InferInteropZodInput<T>;
+  InferInteropZodInput<T> extends never ? {} : InferInteropZodInput<T>;
 
 type InferMiddlewareState<T> =
   // Pattern 1: Match against AgentMiddlewareLike structure to extract TSchema
@@ -454,13 +451,11 @@ type InferMiddlewareState<T> =
     ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
       TSchema extends Record<string, any>
       ? SafeInferInteropZodInput<TSchema>
-      : // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-        {}
+      : {}
     : // Pattern 2: Direct stateSchema property (for testing with MockMiddleware)
       T extends { stateSchema: infer S }
       ? SafeInferInteropZodInput<S>
-      : // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-        {};
+      : {};
 
 /**
  * Helper type to detect if a type is `any`.
@@ -483,20 +478,16 @@ type IsAny<T> = 0 extends 1 & T ? true : false;
 export type InferMiddlewareStatesFromArray<T> =
   // Guard against `any` type - any extends everything so would match first branch incorrectly
   IsAny<T> extends true
-    ? // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-      {}
+    ? {}
     : // Handle undefined/null
       T extends undefined | null
-      ? // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-        {}
+      ? {}
       : // Handle empty readonly array
         T extends readonly []
-        ? // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-          {}
+        ? {}
         : // Handle empty mutable array
           T extends []
-          ? // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-            {}
+          ? {}
           : // Handle readonly tuple [First, ...Rest]
             T extends readonly [
                 infer First,
@@ -513,8 +504,7 @@ export type InferMiddlewareStatesFromArray<T> =
                 : // Handle mutable array of union type
                   T extends (infer U)[]
                   ? InferMiddlewareState<U>
-                  : // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-                    {};
+                  : {};
 
 /**
  * Infer the complete merged state from an agent, including:
@@ -554,22 +544,18 @@ type BaseAgentState<ToolCall = DefaultToolCall> = {
 type InferStructuredResponse<Response> = Response extends {
   __responseFormatUndefined: true;
 }
-  ? // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-    {}
+  ? {}
   : // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Response extends Record<string, any>
     ? { structuredResponse: Response }
-    : // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-      {};
+    : {};
 
 export type InferAgentState<T> = T extends { "~agentTypes": unknown }
   ? ExtractAgentConfig<T> extends never
-    ? // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-      {}
+    ? {}
     : BaseAgentState<InferAgentToolCalls<T>> &
         (ExtractAgentConfig<T>["State"] extends undefined
-          ? // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-            {}
+          ? {}
           : SafeInferInteropZodInput<ExtractAgentConfig<T>["State"]>) &
         InferMiddlewareStatesFromArray<ExtractAgentConfig<T>["Middleware"]> &
         InferStructuredResponse<ExtractAgentConfig<T>["Response"]>
@@ -577,8 +563,7 @@ export type InferAgentState<T> = T extends { "~agentTypes": unknown }
     ? RunOutput
     : T extends { messages: unknown }
       ? T
-      : // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-        {};
+      : {};
 
 /**
  * Helper type to infer schema input type, supporting both Zod v3 and v4.
@@ -587,7 +572,7 @@ export type InferAgentState<T> = T extends { "~agentTypes": unknown }
  * - Zod v4 uses `_zod.input` property
  * - Zod v3 uses `_input` property
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 type InferToolSchemaInput<S> = S extends { _zod: { input: infer Args } }
   ? Args
   : S extends { _input: infer Args }
@@ -601,7 +586,7 @@ type InferToolSchemaInput<S> = S extends { _zod: { input: infer Args } }
  * 1. `_call` method signature (may fail when `_call` is `protected`)
  * 2. `schema` property with self-contained Zod v3/v4 inference
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 type InferToolInput<T> = T extends {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   _call: (arg: infer Args, ...rest: any[]) => any;
