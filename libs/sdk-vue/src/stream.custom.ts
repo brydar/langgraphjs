@@ -17,8 +17,8 @@ import {
 import { getToolCallsWithResults } from "@langchain/langgraph-sdk/utils";
 import type { BagTemplate, Message, Interrupt } from "@langchain/langgraph-sdk";
 import {
-  isBrowserToolInterrupt,
-  handleBrowserToolInterrupt,
+  isHeadlessToolInterrupt,
+  handleHeadlessToolInterrupt,
 } from "@langchain/langgraph-sdk";
 
 export function useStreamCustom<
@@ -199,7 +199,7 @@ export function useStreamCustom<
     await submitDirect(values, submitOptions);
   }
 
-  // Browser tools handling
+  // Headless tools handling
   const handledBrowserTools = new Set<string>();
 
   watch(
@@ -210,32 +210,34 @@ export function useStreamCustom<
   );
 
   watch(streamValues, (vals) => {
-    const { browserTools, onBrowserTool } = options;
-    if (!browserTools?.length) return;
+    const { tools, onTool } = options;
+    if (!tools?.length) return;
 
     const interrupts = vals?.__interrupt__;
     if (!Array.isArray(interrupts) || interrupts.length === 0) return;
 
     for (const interrupt of interrupts) {
-      if (!isBrowserToolInterrupt(interrupt.value)) continue;
+      if (!isHeadlessToolInterrupt(interrupt.value)) continue;
 
       const interruptId = interrupt.id ?? interrupt.value.toolCall.id ?? "";
       if (handledBrowserTools.has(interruptId)) continue;
       handledBrowserTools.add(interruptId);
 
-      void handleBrowserToolInterrupt(
-        interrupt.value,
-        browserTools,
-        onBrowserTool,
-      ).then((result) => {
-        void submit(null, {
-          command: {
-            resume: result.toolCallId
-              ? { [result.toolCallId]: result.value }
-              : result.value,
-          },
-        });
-      });
+      void Promise.resolve().then(() =>
+        handleHeadlessToolInterrupt(
+          interrupt.value,
+          tools,
+          onTool,
+        ).then((result) => {
+          void submit(null, {
+            command: {
+              resume: result.toolCallId
+                ? { [result.toolCallId]: result.value }
+                : result.value,
+            },
+          });
+        }),
+      );
     }
   });
 
