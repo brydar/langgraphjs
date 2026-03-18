@@ -1,5 +1,11 @@
 # @langchain/vue
 
+## 0.1.4
+
+### Patch Changes
+
+- [#2194](https://github.com/langchain-ai/langgraphjs/pull/2194) [`ff43458`](https://github.com/langchain-ai/langgraphjs/commit/ff434584fd34cd1ade8dea5eeeb08816948fb648) Thanks [@pawel-twardziak](https://github.com/pawel-twardziak)! - Fix `useStream` to properly handle `threadId` option and auto-fetch thread history when a `threadId` is provided.
+
 ## 0.1.3
 
 ### Patch Changes
